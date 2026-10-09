@@ -1,0 +1,32 @@
+{
+  "models": {
+    "logistic_regression": {
+      "accuracy": 0.9824,
+      "precision": 0.9932,
+      "recall": 0.9714,
+      "f1_score": 0.9822,
+      "roc_auc": 0.9956
+    },
+    "random_forest": {
+      "accuracy": 0.9921,
+      "precision": 0.994,
+      "recall": 0.9902,
+      "f1_score": 0.9921,
+      "roc_auc": 0.9997
+    }
+  },
+  "top_features": {
+    "is_scanner_ua": 0.4378425743364236,
+    "requests_per_ip": 0.1610535868904427,
+    "has_accept_lang": 0.16029070593035394,
+    "is_headless_tool": 0.05458610946360278,
+    "special_char_count": 0.04633158540505684,
+    "special_char_ratio": 0.0445572619601777,
+    "key_length": 0.029020641770511703,
+    "time_diff_sec": 0.022714472313221736,
+    "payload_length": 0.019003556188525582,
+    "payload_entropy": 0.014616650183871097,
+    "is_missing_ua": 0.008096759669653116,
+    "has_digits": 0.0018860958881593416
+  }
+}

@@ -1,0 +1,26 @@
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+
+# Node.js dependencies & builds
+node_modules/
+dashboard-react/node_modules/
+dashboard-react/dist/
+dist/
+
+# Large raw logs (>100MB exceeds GitHub file size limit)
+cj.log
+*.log
+
+# Python cache & compiled files
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.ipynb_checkpoints/
+
+# OS metadata
+.DS_Store
+Thumbs.db

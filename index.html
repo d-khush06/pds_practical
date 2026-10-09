@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Python for Data Science | Cybersecurity Analytics Lab</title>
+  <meta name="description" content="Comprehensive PDS practicals dashboard on cj.log honeypot dataset. 10 practical modules with interactive charts, deep theory, and live threat detection.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="theme-dark">
+<div id="app" class="workspace">
+
+  <!-- Ambient Background -->
+  <div class="ambient-bg">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+    <div class="grid-pattern"></div>
+  </div>
+
+  <!-- SIDEBAR -->
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-header">
+      <div class="brand">
+        <div class="brand-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        </div>
+        <div class="brand-text">
+          <span class="brand-name">PDS Analytics</span>
+          <span class="brand-sub">B.E. Comp Sci · 5th Sem</span>
+        </div>
+      </div>
+      <button id="sidebar-close" class="icon-btn" title="Collapse sidebar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+
+    <div class="sidebar-search">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input type="text" id="search-input" placeholder="Search practicals..." autocomplete="off">
+    </div>
+
+    <div class="sidebar-nav-section">
+      <div class="nav-section-label">NAVIGATION</div>
+      <nav class="nav-menu" id="nav-menu">
+        <button class="nav-item active" data-view="dashboard">
+          <span class="nav-icon" data-icon="layers"></span>
+          <span>Dashboard</span>
+          <span class="nav-badge">10</span>
+        </button>
+        <button class="nav-item" data-view="sandbox">
+          <span class="nav-icon" data-icon="zap"></span>
+          <span>Live Threat Detector</span>
+          <span class="nav-badge live">AI</span>
+        </button>
+        <button class="nav-item" data-view="dataset-overview">
+          <span class="nav-icon" data-icon="database"></span>
+          <span>Dataset Profile</span>
+        </button>
+        <button class="nav-item" data-view="pipeline-flow">
+          <span class="nav-icon" data-icon="workflow"></span>
+          <span>Pipeline Flow</span>
+        </button>
+      </nav>
+    </div>
+
+    <div class="sidebar-nav-section scrollable">
+      <div class="nav-section-label">PRACTICALS 1 — 10</div>
+      <nav class="nav-menu" id="practicals-nav"></nav>
+    </div>
+
+    <div class="sidebar-footer">
+      <div class="status-pill">
+        <span class="pulse"></span>
+        <span>cj.log · 2,062,365 records</span>
+      </div>
+      <button id="theme-toggle" class="theme-btn">
+        <span class="theme-icon" data-icon="sun"></span>
+        <span id="theme-label">Light Mode</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main id="main" class="main-content">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button id="sidebar-open" class="icon-btn" title="Open sidebar">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+        <div class="breadcrumbs">
+          <span class="crumb">Python for Data Science</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><polyline points="9 18 15 12 9 6"/></svg>
+          <span class="crumb active" id="active-crumb">Dashboard</span>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <div class="topbar-status">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="3" width="12" height="12"><polyline points="20 6 9 17 4 12"/></svg>
+          <span>10/10 Complete</span>
+        </div>
+        <button class="topbar-btn" id="run-current-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+          Terminal
+        </button>
+        <button class="icon-btn" id="theme-toggle-top">
+          <span class="theme-icon-top" data-icon="sun"></span>
+        </button>
+      </div>
+    </header>
+
+    <div class="canvas" id="canvas">
+
+      <!-- VIEW: DASHBOARD -->
+      <section id="view-dashboard" class="view active">
+        <div class="hero-cover cover-dashboard">
+          <div class="cover-content">
+            <div class="hero-badge">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+              Academic Practicals Lab · 2026
+            </div>
+            <h1 class="hero-title">Python for Data Science</h1>
+            <p class="hero-subtitle">End-to-end Cybersecurity Analytics on Honeypot Telemetry</p>
+          </div>
+        </div>
+        <div class="page-body">
+          <div class="callout callout-blue">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+            <div><strong>Curriculum Alignment:</strong> All 10 practicals are fully implemented with Python scripts in <code>scripts/</code>, Jupyter Notebooks in <code>notebooks/</code>, and interactive Chart.js dashboards with detailed learning modules.</div>
+          </div>
+          <div class="stats-grid" id="global-stats">
+            <div class="stat-card">
+              <div class="stat-icon stat-blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg></div>
+              <div class="stat-info"><span class="stat-label">RAW DATASET</span><span class="stat-value">215.4 MB</span><span class="stat-sub">cj.log honeypot</span></div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon stat-purple"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+              <div class="stat-info"><span class="stat-label">TOTAL EVENTS</span><span class="stat-value">2,062,365</span><span class="stat-sub">Attacks &amp; benign</span></div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon stat-cyan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="22" y1="12" x2="18" y2="12"/><line x1="6" y1="12" x2="2" y2="12"/><line x1="12" y1="6" x2="12" y2="2"/><line x1="12" y1="22" x2="12" y2="18"/></svg></div>
+              <div class="stat-info"><span class="stat-label">MODEL ACCURACY</span><span class="stat-value accent">99.21%</span><span class="stat-sub">Random Forest</span></div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon stat-green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
+              <div class="stat-info"><span class="stat-label">STATUS</span><span class="stat-value green">10 / 10 Done</span><span class="stat-sub">All exit code 0</span></div>
+            </div>
+          </div>
+          <div class="db-toolbar">
+            <div class="db-title-row">
+              <div class="db-title">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+                Practicals Database
+              </div>
+              <div class="view-toggle-group">
+                <button class="view-toggle active" data-db-view="gallery">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                  Gallery
+                </button>
+                <button class="view-toggle" data-db-view="table">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M9 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-4"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/></svg>
+                  Table
+                </button>
+              </div>
+            </div>
+            <div class="filter-chips" id="filter-chips">
+              <button class="chip active" data-category="all">All (10)</button>
+              <button class="chip" data-category="Data Exploration">Exploration</button>
+              <button class="chip" data-category="Data Engineering">Engineering</button>
+              <button class="chip" data-category="Preprocessing">Preprocessing</button>
+              <button class="chip" data-category="Cybersecurity">Cybersecurity</button>
+              <button class="chip" data-category="Feature Engineering">Features</button>
+              <button class="chip" data-category="Data Balancing">Balancing</button>
+              <button class="chip" data-category="Analytics">Analytics</button>
+              <button class="chip" data-category="Visualization">Visualization</button>
+              <button class="chip" data-category="Machine Learning">ML</button>
+              <button class="chip" data-category="MLOps Pipeline">MLOps</button>
+            </div>
+          </div>
+          <div class="gallery-grid" id="gallery-grid"></div>
+          <div class="table-wrap hidden" id="table-wrap">
+            <table class="data-table">
+              <thead><tr><th>Practical</th><th>Category</th><th>Tags</th><th>Script</th><th>Status</th><th>Open</th></tr></thead>
+              <tbody id="table-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- VIEW: PRACTICAL DETAIL -->
+      <section id="view-practical" class="view">
+        <div class="hero-cover" id="detail-cover">
+          <div class="cover-content">
+            <div class="hero-badge" id="detail-cover-badge">Module Deep-Dive</div>
+          </div>
+        </div>
+        <div class="page-body">
+          <div class="detail-header">
+            <div class="detail-icon-badge" id="detail-icon"></div>
+            <div class="detail-title-block">
+              <h1 class="page-title" id="detail-title">Practical Title</h1>
+              <div class="detail-meta-pills" id="detail-meta-pills"></div>
+            </div>
+          </div>
+          <div class="props-block">
+            <div class="prop-row">
+              <span class="prop-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> Status</span>
+              <span class="prop-val"><span class="tag tag-green">Completed &amp; Verified</span></span>
+            </div>
+            <div class="prop-row">
+              <span class="prop-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg> Category</span>
+              <span class="prop-val" id="detail-category"></span>
+            </div>
+            <div class="prop-row">
+              <span class="prop-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg> Script</span>
+              <span class="prop-val"><code id="detail-py-file"></code></span>
+            </div>
+            <div class="prop-row">
+              <span class="prop-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg> Notebook</span>
+              <span class="prop-val"><code id="detail-ipynb-file"></code></span>
+            </div>
+            <div class="prop-row">
+              <span class="prop-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg> Tags</span>
+              <span class="prop-val" id="detail-tags"></span>
+            </div>
+          </div>
+          <div class="callout callout-amber" style="margin-top:1.5rem;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><circle cx="12" cy="12" r="10"/><line x1="22" y1="12" x2="18" y2="12"/><line x1="6" y1="12" x2="2" y2="12"/><line x1="12" y1="6" x2="12" y2="2"/><line x1="12" y1="22" x2="12" y2="18"/></svg>
+            <div><strong>Academic Objective: </strong><span id="detail-objective"></span></div>
+          </div>
+          <div class="metrics-grid" id="detail-metrics"></div>
+          <div class="tabs-wrapper">
+            <div class="tabs-nav" id="tabs-nav">
+              <button class="tab-btn active" data-tab="tab-learn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+                Theory &amp; Learning
+              </button>
+              <button class="tab-btn" data-tab="tab-chart">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+                Interactive Chart
+              </button>
+              <button class="tab-btn" data-tab="tab-code">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                Python Code
+              </button>
+              <button class="tab-btn" data-tab="tab-terminal">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+                Terminal Output
+              </button>
+              <button class="tab-btn" data-tab="tab-notebook">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/></svg>
+                Notebook
+              </button>
+            </div>
+            <div class="tab-pane active" id="tab-learn"><div id="learning-content"></div></div>
+            <div class="tab-pane" id="tab-chart"><div id="chart-content"></div></div>
+            <div class="tab-pane" id="tab-code">
+              <div class="code-viewer">
+                <div class="code-header">
+                  <div class="code-dots"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span></div>
+                  <span class="code-filename" id="code-filename"></span>
+                  <button class="action-btn" id="copy-code-btn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                    Copy
+                  </button>
+                </div>
+                <pre class="code-pre"><code id="code-content"></code></pre>
+              </div>
+            </div>
+            <div class="tab-pane" id="tab-terminal">
+              <div class="terminal-window">
+                <div class="term-header">
+                  <div class="code-dots"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span></div>
+                  <span class="term-title">bash — python3 (PDS Environment)</span>
+                  <span class="term-exit">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="12" height="12"><polyline points="20 6 9 17 4 12"/></svg>
+                    Exit 0
+                  </span>
+                </div>
+                <div class="term-body">
+                  <div class="term-prompt"><span class="term-user">khush@pds</span>:<span class="term-dir">~/PDS_Practicals</span>$ <span id="term-cmd"></span></div>
+                  <pre class="term-output" id="term-output"></pre>
+                  <div class="term-cursor"><span class="term-user">khush@pds</span>:<span class="term-dir">~/PDS_Practicals</span>$ <span class="cursor-blink">█</span></div>
+                </div>
+              </div>
+            </div>
+            <div class="tab-pane" id="tab-notebook"><div class="nb-wrapper" id="notebook-view"></div></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- VIEW: SANDBOX -->
+      <section id="view-sandbox" class="view">
+        <div class="hero-cover cover-sandbox">
+          <div class="cover-content">
+            <div class="hero-badge" style="display:inline-flex;align-items:center;gap:6px;">
+              <span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#10b981;box-shadow:0 0 8px #10b981;"></span>
+              SIMULATION MODE
+            </div>
+            <h1 class="hero-title">Live Payload Sandbox &amp; Threat Analyzer</h1>
+            <p class="hero-subtitle">SIMULATION ONLY — No request is sent to the supplied IP or any external target.</p>
+          </div>
+        </div>
+        <div class="page-body">
+          <div class="callout callout-amber" style="background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.3);padding:14px;border-radius:8px;margin-bottom:16px;display:flex;align-items:flex-start;gap:12px;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" width="20" height="20" style="flex-shrink:0;margin-top:2px;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <div>
+              <div style="font-weight:700;color:#fbbf24;font-size:12px;letter-spacing:0.5px;text-transform:uppercase;">Controlled Threat-Analysis Simulator &bull; Safe Environment</div>
+              <div style="font-size:12.5px;color:#d1d5db;margin-top:3px;line-height:1.5;">This sandbox analyzes request characteristics locally. No network request or payload execution is performed.</div>
+            </div>
+          </div>
+          <div class="sandbox-layout">
+            <div class="sandbox-panel">
+              <div class="panel-title" style="display:flex;justify-content:space-between;align-items:center;">
+                <span style="display:inline-flex;align-items:center;gap:6px;">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                  Request Parameters
+                </span>
+                <span style="font-size:10px;padding:2px 8px;border-radius:12px;background:rgba(16,185,129,0.12);color:#34d399;border:1px solid rgba(16,185,129,0.3);">ZERO OUTBOUND TRAFFIC</span>
+              </div>
+              <div class="presets">
+                <div class="preset-label" style="display:flex;justify-content:space-between;">
+                  <span>LOAD TEST INPUT <span style="font-size:10px;color:var(--text-muted);">(Detection Test Cases)</span>:</span>
+                </div>
+                <div class="preset-btns">
+                  <button class="preset-btn" data-preset="sqli" title="Load SQL Injection test data">SQLi Test</button>
+                  <button class="preset-btn" data-preset="rce" title="Load Command Injection test data">RCE Test</button>
+                  <button class="preset-btn" data-preset="xss" title="Load Cross-Site Scripting test data">XSS Test</button>
+                  <button class="preset-btn" data-preset="scanner" title="Load Scanner Recon test data">Scanner Test</button>
+                  <button class="preset-btn" data-preset="lfi" title="Load Path Traversal test data">LFI Test</button>
+                  <button class="preset-btn benign" data-preset="benign" title="Load Benign Traffic test data">Benign Traffic</button>
+                </div>
+                <div id="sb-preset-notice" style="display:none;font-size:11px;color:#93c5fd;margin-top:6px;background:rgba(59,130,246,0.1);padding:5px 8px;border-radius:4px;border:1px solid rgba(59,130,246,0.2);"></div>
+              </div>
+              <div id="sb-validation-errors" style="display:none;font-size:11.5px;color:#f87171;background:rgba(239,68,68,0.1);padding:8px 10px;border-radius:6px;border:1px solid rgba(239,68,68,0.25);margin-bottom:12px;"></div>
+              <div class="form-group">
+                <label style="display:flex;justify-content:space-between;">
+                  <span>Client IP Address</span>
+                  <span id="sb-ip-type-badge" style="font-size:10px;color:#9ca3af;font-weight:normal;">Metadata Only</span>
+                </label>
+                <input type="text" id="sb-ip" value="45.33.32.156">
+              </div>
+              <div class="form-group"><label>Parameter Key</label><input type="text" id="sb-key" value="id"></div>
+              <div class="form-group">
+                <label style="display:flex;justify-content:space-between;">
+                  <span>Parameter Value (Payload)</span>
+                  <span id="sb-entropy-badge" style="font-size:10px;color:#9ca3af;font-weight:normal;">Text Data</span>
+                </label>
+                <input type="text" id="sb-val" value="1' OR 1=1 --">
+              </div>
+              <div class="form-group"><label>User-Agent String</label><input type="text" id="sb-ua" value="sqlmap/1.6.12#stable"></div>
+              <button class="run-btn" id="run-sandbox" style="width:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px 14px;gap:2px;">
+                <span style="display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                  Run Local Threat Analysis
+                </span>
+                <span style="font-size:10px;letter-spacing:0.5px;opacity:0.8;font-weight:500;">LOCAL SIMULATION &bull; NO NETWORK REQUEST SENT</span>
+              </button>
+            </div>
+            <div class="sandbox-results hidden" id="sandbox-results"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- VIEW: DATASET OVERVIEW -->
+      <section id="view-dataset-overview" class="view">
+        <div class="hero-cover cover-dataset">
+          <div class="cover-content">
+            <div class="hero-badge">Dataset Intelligence Profile</div>
+            <h1 class="hero-title">cj.log — Honeypot Dataset</h1>
+            <p class="hero-subtitle">Real web attack traffic from January 2023 honeypot sensors</p>
+          </div>
+        </div>
+        <div class="page-body">
+          <div class="stats-grid">
+            <div class="stat-card"><div class="stat-icon stat-blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg></div><div class="stat-info"><span class="stat-label">FILE SIZE</span><span class="stat-value">215.40 MB</span><span class="stat-sub">225,867,389 bytes</span></div></div>
+            <div class="stat-card"><div class="stat-icon stat-purple"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div><div class="stat-info"><span class="stat-label">TOTAL RECORDS</span><span class="stat-value">2,062,365</span><span class="stat-sub">JSON array lines</span></div></div>
+            <div class="stat-card"><div class="stat-icon stat-rose"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><div class="stat-info"><span class="stat-label">ATTACK EVENTS</span><span class="stat-value">15,896</span><span class="stat-sub">31.8% of sample</span></div></div>
+            <div class="stat-card"><div class="stat-icon stat-green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div><div class="stat-info"><span class="stat-label">JSON VALIDITY</span><span class="stat-value accent">99.99%</span><span class="stat-sub">8-field arrays</span></div></div>
+          </div>
+          <div class="section-title">Schema Field Reference</div>
+          <div class="schema-table-wrap">
+            <table class="data-table">
+              <thead><tr><th>Index</th><th>Field Name</th><th>Data Type</th><th>Missing %</th><th>Analytical Purpose</th></tr></thead>
+              <tbody>
+                <tr><td><code>0</code></td><td><strong>param_key</strong></td><td><span class="tag tag-blue">str / null</span></td><td><span class="missing-high">81.64%</span></td><td>HTTP parameter name, shell command (ls, ps, cmd)</td></tr>
+                <tr><td><code>1</code></td><td><strong>param_value</strong></td><td><span class="tag tag-blue">str / null</span></td><td><span class="missing-high">81.64%</span></td><td>Payload — SQLi strings, path traversals, XSS scripts</td></tr>
+                <tr><td><code>2</code></td><td><strong>timestamp</strong></td><td><span class="tag tag-purple">datetime</span></td><td><span class="missing-low">0.00%</span></td><td>ISO 8601 event time for temporal analysis</td></tr>
+                <tr><td><code>3</code></td><td><strong>client_ip</strong></td><td><span class="tag tag-purple">str</span></td><td><span class="missing-low">0.00%</span></td><td>Source IP — geolocation &amp; frequency profiling</td></tr>
+                <tr><td><code>4</code></td><td><strong>client_port</strong></td><td><span class="tag tag-purple">int</span></td><td><span class="missing-low">0.00%</span></td><td>Ephemeral source port number</td></tr>
+                <tr><td><code>5</code></td><td><strong>user_agent</strong></td><td><span class="tag tag-blue">str / null</span></td><td><span class="missing-med">4.64%</span></td><td>Browser / bot / scanner identification string</td></tr>
+                <tr><td><code>6</code></td><td><strong>accept_language</strong></td><td><span class="tag tag-blue">str / null</span></td><td><span class="missing-high">51.76%</span></td><td>Language header — None for headless scripts</td></tr>
+                <tr><td><code>7</code></td><td><strong>target_ip</strong></td><td><span class="tag tag-blue">str / null</span></td><td><span class="missing-high">74.37%</span></td><td>Honeypot server destination IP address</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="section-title">Attack Distribution Overview</div>
+          <div class="two-col">
+            <div class="chart-card"><div class="chart-card-title">Attack vs Benign Split</div><div class="chart-container"><canvas id="dataset-donut"></canvas></div></div>
+            <div class="chart-card"><div class="chart-card-title">Attack Category Breakdown</div><div class="chart-container"><canvas id="dataset-bar"></canvas></div></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- VIEW: PIPELINE FLOW -->
+      <section id="view-pipeline-flow" class="view">
+        <div class="hero-cover cover-pipeline">
+          <div class="cover-content">
+            <div class="hero-badge">End-to-End Data Pipeline</div>
+            <h1 class="hero-title">10-Stage Analytics Pipeline</h1>
+            <p class="hero-subtitle">From raw honeypot bytes to a production-ready attack detection model</p>
+          </div>
+        </div>
+        <div class="page-body">
+          <div class="pipeline-stages" id="pipeline-stages"></div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Lightbox -->
+  <div class="lightbox hidden" id="lightbox">
+    <div class="lightbox-backdrop" id="lb-backdrop"></div>
+    <div class="lightbox-inner">
+      <button class="lightbox-close" id="lb-close">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+      <img id="lb-img" src="" alt="">
+      <div class="lightbox-caption" id="lb-caption"></div>
+    </div>
+  </div>
+
+</div>
+<script src="app.js"></script>
+</body>
+</html>
