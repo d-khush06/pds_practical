@@ -410,15 +410,25 @@ def main():
                 pass
 
     # Resolve candidate log paths
-    candidates = [
-        input_path,
+    candidates = []
+    if input_path:
+        candidates.extend([
+            input_path,
+            os.path.join("..", input_path),
+            os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", input_path),
+            os.path.join(os.path.expanduser("~"), "Downloads", input_path),
+            os.path.join(os.path.expanduser("~"), "Downloads", "PDS_Practicals", input_path)
+        ])
+    candidates.extend([
+        "sample.log",
+        "../sample.log",
         "cj.log",
         "../cj.log",
         "data/structured_logs_sample.csv",
         "../data/structured_logs_sample.csv",
         "data/cleaned_logs_sample.csv",
         "../data/cleaned_logs_sample.csv"
-    ]
+    ])
 
     resolved_path = None
     for cand in candidates:
