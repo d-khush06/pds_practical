@@ -4,7 +4,8 @@ import {
   MessageSquare, TerminalSquare, Cpu, Send, Sparkles, ArrowUp,
   FileText, Activity, Info, Clock, Zap, Lock, Database, Globe,
   ChevronDown, ChevronRight, X, TrendingUp, AlertCircle, Eye,
-  RefreshCw, Check, HelpCircle
+  RefreshCw, Check, HelpCircle, BarChart2, Link2, Search,
+  Lightbulb, Paperclip, ListChecks, FileCode, Target
 } from 'lucide-react'
 import { calcEntropy } from '../../utils/helpers'
 import { parseLogFile } from '../../utils/logParser'
@@ -21,6 +22,100 @@ const SEVERITY_COLORS = {
   CRITICAL: '#dc2626', FATAL: '#dc2626', EMERGENCY: '#b91c1c', ALERT: '#d97706',
   ERROR: '#ef4444', WARNING: '#f59e0b', NOTICE: '#60a5fa',
   INFO: '#34d399', DEBUG: '#8b5cf6', TRACE: '#a78bfa'
+}
+
+function renderIcon(iconName, size = 18, color) {
+  if (!iconName) return null
+  if (typeof iconName !== 'string') return iconName
+
+  const iconProps = { size, style: color ? { color } : undefined }
+
+  switch (iconName) {
+    case 'bot':
+    case '🤖':
+      return <Bot {...iconProps} style={{ color: color || 'var(--accent-indigo, #818cf8)' }} />
+    case 'shield':
+    case 'security':
+    case '🛡️':
+    case '🛡':
+      return <Shield {...iconProps} style={{ color: color || '#38bdf8' }} />
+    case 'alert':
+    case 'warn':
+    case 'warning':
+    case '⚠️':
+    case '⚠':
+      return <AlertTriangle {...iconProps} style={{ color: color || '#f59e0b' }} />
+    case 'globe':
+    case 'network':
+    case '🌐':
+      return <Globe {...iconProps} style={{ color: color || '#60a5fa' }} />
+    case 'link':
+    case 'endpoint':
+    case '🔗':
+      return <Link2 {...iconProps} style={{ color: color || '#a78bfa' }} />
+    case 'chart':
+    case 'status':
+    case '📊':
+      return <BarChart2 {...iconProps} style={{ color: color || '#34d399' }} />
+    case 'lock':
+    case 'auth':
+    case '🔐':
+    case '🔒':
+      return <Lock {...iconProps} style={{ color: color || '#f43f5e' }} />
+    case 'database':
+    case 'db':
+    case '🗄️':
+    case '🗄':
+      return <Database {...iconProps} style={{ color: color || '#fb923c' }} />
+    case 'trend':
+    case 'stats':
+    case '📈':
+      return <TrendingUp {...iconProps} style={{ color: color || '#2dd4bf' }} />
+    case 'clock':
+    case 'time':
+    case 'timeline':
+    case '🕐':
+      return <Clock {...iconProps} style={{ color: color || '#818cf8' }} />
+    case 'lightbulb':
+    case 'tips':
+    case 'remedy':
+    case '💡':
+      return <Lightbulb {...iconProps} style={{ color: color || '#facc15' }} />
+    case 'search':
+    case 'format':
+    case 'schema':
+    case '🔍':
+      return <Search {...iconProps} style={{ color: color || '#38bdf8' }} />
+    case 'check':
+    case 'clean':
+    case 'success':
+    case '✅':
+      return <CheckCircle2 {...iconProps} style={{ color: color || '#34d399' }} />
+    case 'danger':
+    case 'emergency':
+    case '🚨':
+      return <AlertCircle {...iconProps} style={{ color: color || '#ef4444' }} />
+    case 'sparkles':
+    case '⚡':
+      return <Zap {...iconProps} style={{ color: color || '#f59e0b' }} />
+    case 'clipboard':
+    case 'checklist':
+    case '📋':
+      return <ListChecks {...iconProps} style={{ color: color || '#60a5fa' }} />
+    case 'message':
+    case 'chat':
+    case '💬':
+      return <MessageSquare {...iconProps} style={{ color: color || '#c084fc' }} />
+    case 'paperclip':
+    case 'file':
+    case '📎':
+      return <Paperclip {...iconProps} style={{ color: color || '#94a3b8' }} />
+    case 'info':
+    case 'ℹ️':
+      return <Info {...iconProps} style={{ color: color || '#60a5fa' }} />
+    default:
+      return null
+  }
 }
 
 function Badge({ text, color, bg }) {
@@ -370,7 +465,7 @@ function buildAiResponse(aiCtx, question) {
 
   // ── THREAT / SECURITY QUERY ──────────────────────────────────────────────
   if (has(['threat', 'attack', 'security', 'danger', 'malicious', 'hack', 'safe', 'sqli', 'xss', 'lfi', 'injection', 'recon', 'scanner', 'vulnerability'])) {
-    blocks.push({ type: 'heading', text: 'Security Threat & Attack Analysis', icon: '🛡️' })
+    blocks.push({ type: 'heading', text: 'Security Threat & Attack Analysis', icon: 'shield' })
     if (aiCtx.threat_count > 0) {
       blocks.push({
         type: 'alert',
@@ -450,7 +545,7 @@ function buildAiResponse(aiCtx, question) {
 
   // ── ERROR / WARNING / EXCEPTION QUERY ─────────────────────────────────────
   } else if (has(['error', 'warn', 'warning', 'fail', 'failure', 'exception', 'crash', '500', '404', 'issue', 'bug', 'broken', 'problem', 'health'])) {
-    blocks.push({ type: 'heading', text: 'Error & System Health Analysis', icon: '⚠️' })
+    blocks.push({ type: 'heading', text: 'Error & System Health Analysis', icon: 'alert' })
 
     const totalErr = aiCtx.total_errors || 0
     const totalWarn = aiCtx.total_warnings || 0
@@ -523,7 +618,7 @@ function buildAiResponse(aiCtx, question) {
 
   // ── IP ADDRESS / CLIENT ACTIVITY QUERY ─────────────────────────────────────
   } else if (has(['ip', 'client', 'visitor', 'user', 'attacker', 'source', 'who', 'traffic from'])) {
-    blocks.push({ type: 'heading', text: 'Client IP Activity & Traffic Analysis', icon: '🌐' })
+    blocks.push({ type: 'heading', text: 'Client IP Activity & Traffic Analysis', icon: 'globe' })
 
     if (aiCtx.http && aiCtx.http.top_ips && aiCtx.http.top_ips.length > 0) {
       const topIps = aiCtx.http.top_ips
@@ -598,7 +693,7 @@ function buildAiResponse(aiCtx, question) {
 
   // ── ENDPOINTS / URLS / PATHS QUERY ────────────────────────────────────────
   } else if (has(['endpoint', 'url', 'path', 'route', 'request', 'page', 'uri', 'get', 'post', 'method'])) {
-    blocks.push({ type: 'heading', text: 'HTTP Request & Endpoint Analysis', icon: '🔗' })
+    blocks.push({ type: 'heading', text: 'HTTP Request & Endpoint Analysis', icon: 'link' })
 
     if (aiCtx.http && aiCtx.http.top_endpoints && aiCtx.http.top_endpoints.length > 0) {
       const topEp = aiCtx.http.top_endpoints
@@ -660,7 +755,7 @@ function buildAiResponse(aiCtx, question) {
 
   // ── STATUS CODES QUERY ───────────────────────────────────────────────────
   } else if (has(['status', 'status code', 'code', 'response code', '200', '2xx', '3xx', '4xx', '5xx'])) {
-    blocks.push({ type: 'heading', text: 'HTTP Status Code Distribution', icon: '📊' })
+    blocks.push({ type: 'heading', text: 'HTTP Status Code Distribution', icon: 'chart' })
 
     if (aiCtx.http) {
       blocks.push({
@@ -709,7 +804,7 @@ function buildAiResponse(aiCtx, question) {
 
   // ── AUTHENTICATION & USERS QUERY ──────────────────────────────────────────
   } else if (has(['auth', 'login', 'logout', 'password', 'session', 'credential', 'user'])) {
-    blocks.push({ type: 'heading', text: 'Authentication & Session Activity', icon: '🔐' })
+    blocks.push({ type: 'heading', text: 'Authentication & Session Activity', icon: 'lock' })
 
     if (aiCtx.auth) {
       blocks.push({
@@ -750,7 +845,7 @@ function buildAiResponse(aiCtx, question) {
 
   // ── DATABASE QUERY ────────────────────────────────────────────────────────
   } else if (has(['database', 'db', 'query', 'sql', 'mysql', 'postgres', 'slow query'])) {
-    blocks.push({ type: 'heading', text: 'Database Operations & Queries', icon: '🗄️' })
+    blocks.push({ type: 'heading', text: 'Database Operations & Queries', icon: 'database' })
 
     if (aiCtx.database) {
       blocks.push({
@@ -789,7 +884,7 @@ function buildAiResponse(aiCtx, question) {
 
   // ── ANOMALY QUERY ─────────────────────────────────────────────────────────
   } else if (has(['anomaly', 'unusual', 'spike', 'weird', 'strange', 'abnormal', 'deviation'])) {
-    blocks.push({ type: 'heading', text: 'Statistical Anomaly Report', icon: '📈' })
+    blocks.push({ type: 'heading', text: 'Statistical Anomaly Report', icon: 'trend' })
 
     if (aiCtx.anomaly_count > 0) {
       blocks.push({
@@ -845,7 +940,7 @@ function buildAiResponse(aiCtx, question) {
 
   // ── TIMELINE QUERY ────────────────────────────────────────────────────────
   } else if (has(['time', 'duration', 'period', 'when', 'start', 'end', 'range', 'date', 'hours', 'window'])) {
-    blocks.push({ type: 'heading', text: 'Log Timeline & Activity Window', icon: '🕐' })
+    blocks.push({ type: 'heading', text: 'Log Timeline & Activity Window', icon: 'clock' })
 
     if (aiCtx.timeline.first) {
       const d = aiCtx.timeline.duration_seconds
@@ -889,35 +984,35 @@ function buildAiResponse(aiCtx, question) {
 
   // ── RECOMMENDATIONS / MITIGATION QUERY ────────────────────────────────────
   } else if (has(['recommend', 'suggestion', 'fix', 'mitigate', 'action', 'next step', 'advice', 'remediation', 'how to', 'what should i do'])) {
-    blocks.push({ type: 'heading', text: 'Actionable Remediation & Mitigation Checklist', icon: '💡' })
+    blocks.push({ type: 'heading', text: 'Actionable Remediation & Mitigation Checklist', icon: 'lightbulb' })
 
     const recs = []
     if (aiCtx.threat_count > 0) {
-      recs.push('🛡️ **Perimeter IP Blocking**: Block the identified attacking IPs in your edge firewall (iptables / cloud WAF).')
+      recs.push('**Perimeter IP Blocking**: Block the identified attacking IPs in your edge firewall (iptables / cloud WAF).')
       if ((aiCtx.threats || []).some(t => t.title.toLowerCase().includes('sql'))) {
-        recs.push('🔒 **Fix SQL Injection Vulnerabilities**: Review database queries touching user input and ensure parameterized statements / ORM usage.')
+        recs.push('**Fix SQL Injection Vulnerabilities**: Review database queries touching user input and ensure parameterized statements / ORM usage.')
       }
       if ((aiCtx.threats || []).some(t => t.title.toLowerCase().includes('xss'))) {
-        recs.push('🛡️ **Implement CSP & Sanitization**: Add strict `Content-Security-Policy` headers and sanitize HTML output.')
+        recs.push('**Implement CSP & Sanitization**: Add strict `Content-Security-Policy` headers and sanitize HTML output.')
       }
       if ((aiCtx.threats || []).some(t => t.title.toLowerCase().includes('scanner'))) {
-        recs.push('🤖 **Automated Bot Protection**: Configure rate limits and user-agent challenges to filter out automated vulnerability scanners.')
+        recs.push('**Automated Bot Protection**: Configure rate limits and user-agent challenges to filter out automated vulnerability scanners.')
       }
     }
 
     if (aiCtx.total_errors > 0) {
-      recs.push(`⚠️ **Application Debugging**: Review the ${aiCtx.total_errors} recorded errors and address root-cause exceptions.`)
+      recs.push(`**Application Debugging**: Review the ${aiCtx.total_errors} recorded errors and address root-cause exceptions.`)
     }
 
     if (aiCtx.http && aiCtx.http.status_4xx > 20) {
-      recs.push('🔍 **Directory Traversal / Scan Hardening**: Elevated 404 count detected; consider fail2ban or endpoint rate-limiting.')
+      recs.push('**Directory Traversal / Scan Hardening**: Elevated 404 count detected; consider fail2ban or endpoint rate-limiting.')
     }
 
     if (aiCtx.auth && parseFloat(aiCtx.auth.failure_rate) > 20) {
-      recs.push('🔐 **Credential Protection**: Auth failure rate exceeds 20%; enforce multi-factor authentication (MFA) and account lockout limits.')
+      recs.push('**Credential Protection**: Auth failure rate exceeds 20%; enforce multi-factor authentication (MFA) and account lockout limits.')
     }
 
-    recs.push('📋 **Monitoring & Alerting**: Set up active threshold-based alerts for CRITICAL severity events in your SIEM/dashboard.')
+    recs.push('**Monitoring & Alerting**: Set up active threshold-based alerts for CRITICAL severity events in your SIEM/dashboard.')
 
     blocks.push({ type: 'bullets', items: recs })
 
@@ -928,7 +1023,7 @@ function buildAiResponse(aiCtx, question) {
 
   // ── FORMAT & SCHEMA QUERY ────────────────────────────────────────────────
   } else if (has(['format', 'type', 'kind', 'what', 'structure', 'schema', 'field', 'column', 'fields'])) {
-    blocks.push({ type: 'heading', text: 'Detected Log Format & Schema', icon: '🔍' })
+    blocks.push({ type: 'heading', text: 'Detected Log Format & Schema', icon: 'search' })
 
     blocks.push({
       type: 'metric_cards',
@@ -961,7 +1056,7 @@ function buildAiResponse(aiCtx, question) {
 
   // ── PARSE COVERAGE QUERY ──────────────────────────────────────────────────
   } else if (has(['parse', 'coverage', 'miss', 'skip', 'unparsed', 'success rate'])) {
-    blocks.push({ type: 'heading', text: 'Parse Coverage & Ingestion Stats', icon: '📊' })
+    blocks.push({ type: 'heading', text: 'Parse Coverage & Ingestion Stats', icon: 'chart' })
 
     blocks.push({
       type: 'kv',
@@ -980,7 +1075,7 @@ function buildAiResponse(aiCtx, question) {
 
   // ── GENERAL SUMMARY (default) ────────────────────────────────────────────
   } else {
-    blocks.push({ type: 'heading', text: 'Log Analysis Executive Summary', icon: '🤖' })
+    blocks.push({ type: 'heading', text: 'Log Analysis Executive Summary', icon: 'bot' })
 
     const d = aiCtx.timeline.duration_seconds
     const dur = !d ? null : d < 60 ? `${d}s` : d < 3600 ? `${Math.floor(d/60)}m ${d%60}s` : d < 86400 ? `${Math.floor(d/3600)}h ${Math.floor((d%3600)/60)}m` : `${Math.floor(d/86400)}d ${Math.floor((d%86400)/3600)}h`
@@ -1000,19 +1095,19 @@ function buildAiResponse(aiCtx, question) {
       blocks.push({
         type: 'alert',
         variant: 'danger',
-        text: `⚠️ **Action Required**: ${aiCtx.threat_count} security attack signature(s) detected in the log entries.`
+        text: `**Action Required**: ${aiCtx.threat_count} security attack signature(s) detected in the log entries.`
       })
     } else if ((aiCtx.total_errors || 0) > 0) {
       blocks.push({
         type: 'alert',
         variant: 'warning',
-        text: `⚡ **Attention**: ${aiCtx.total_errors} application error events detected during analysis.`
+        text: `**Attention**: ${aiCtx.total_errors} application error events detected during analysis.`
       })
     } else {
       blocks.push({
         type: 'alert',
         variant: 'success',
-        text: '✅ **Log Ingestion Clean**: System operating within normal security parameters; no attack signatures detected.'
+        text: '**Log Ingestion Clean**: System operating within normal security parameters; no attack signatures detected.'
       })
     }
 
@@ -1073,16 +1168,16 @@ export default function SandboxView() {
   const [chatLog, setChatLog] = useState([{
     role: 'ai',
     blocks: [
-      { type: 'heading', text: 'Generic Log Analysis AI', icon: '🤖' },
-      { type: 'text', text: 'Upload **any log file** and I will run the full analysis pipeline on its actual content.' },
+      { type: 'heading', text: 'Generic Log Analysis AI', icon: 'bot' },
+      { type: 'text', text: 'Upload **any log file** to execute automated forensic ingestion, schema inference, and threat detection on its live contents.' },
       { type: 'bullets', items: [
-        'Auto-detect the log format (Apache, Nginx, Java, Python, JSON, syslog, CSV, unknown…)',
-        'Extract all real fields from the uploaded content',
-        'Calculate evidence-based metrics with full provenance',
-        'Detect statistical anomalies and security indicators',
-        'Generate a dynamic report — no invented or hard-coded values',
+        '**Format Auto-Detection**: Supports Apache, Nginx, Java, Python, JSON arrays, Syslog, CSV, and custom streams.',
+        '**Schema & Field Extraction**: Normalizes attributes, IP endpoints, HTTP verbs, status codes, and user-agents.',
+        '**Evidence-Based Metrics**: Computes throughput rates, error frequencies, and unique origin profiling.',
+        '**Threat & Anomaly Profiling**: Flags OWASP signatures (SQLi, XSS, RCE), Shannon entropy spikes, and scanning bots.',
+        '**Deterministic Analysis**: 100% dynamic calculations derived strictly from parsed log entries with zero simulated data.'
       ]},
-      { type: 'alert', variant: 'info', text: 'Accepts: .log · .txt · .json · .csv · .tsv · or any plain-text log file.' },
+      { type: 'alert', variant: 'info', text: 'Supported formats: `.log` · `.txt` · `.json` · `.csv` · `.tsv` or any plain-text log file.' },
     ]
   }])
   const [chatInput, setChatInput] = useState('')
@@ -1138,7 +1233,7 @@ export default function SandboxView() {
 
     // Build user message display text
     let userMsgText = text
-    if (pendingFile) userMsgText = `📎 **${pendingFile.name}**${text ? `\n${text}` : ''}`
+    if (pendingFile) userMsgText = `**Attached Log File:** \`${pendingFile.name}\`${text ? `\n\n${text}` : ''}`
     setChatLog(prev => [...prev, { role: 'user', text: userMsgText }])
     setIsAnalyzing(true)
 
@@ -1248,10 +1343,10 @@ export default function SandboxView() {
 
   // ── Rich message block renderer ──────────────────────────────────────────
   const VARIANT_STYLES = {
-    info:    { bg: 'rgba(96,165,250,0.09)',  border: 'rgba(96,165,250,0.3)',  icon: 'ℹ️',  color: '#60a5fa' },
-    success: { bg: 'rgba(52,211,153,0.09)',  border: 'rgba(52,211,153,0.3)',  icon: '✅', color: '#34d399' },
-    warning: { bg: 'rgba(245,158,11,0.10)',  border: 'rgba(245,158,11,0.35)', icon: '⚠️',  color: '#f59e0b' },
-    danger:  { bg: 'rgba(239,68,68,0.10)',   border: 'rgba(239,68,68,0.35)',  icon: '🚨', color: '#ef4444' },
+    info:    { bg: 'rgba(96,165,250,0.08)',  border: 'rgba(96,165,250,0.25)',  Icon: Info,          color: '#60a5fa' },
+    success: { bg: 'rgba(52,211,153,0.08)',  border: 'rgba(52,211,153,0.25)',  Icon: CheckCircle2,  color: '#34d399' },
+    warning: { bg: 'rgba(245,158,11,0.08)',  border: 'rgba(245,158,11,0.28)', Icon: AlertTriangle, color: '#f59e0b' },
+    danger:  { bg: 'rgba(239,68,68,0.08)',   border: 'rgba(239,68,68,0.28)',  Icon: AlertCircle,   color: '#ef4444' },
   }
   const HIGHLIGHT_COLORS = { success: '#34d399', warning: '#f59e0b', danger: '#ef4444' }
 
@@ -1262,7 +1357,7 @@ export default function SandboxView() {
         return <code key={i} style={{ background: 'rgba(0,210,255,0.10)', padding: '1px 6px', borderRadius: 4, color: 'var(--accent-cyan)', fontFamily: 'monospace', fontSize: '12.5px', border: '1px solid rgba(0,210,255,0.18)' }}>{part.slice(1,-1)}</code>
       }
       if (part.startsWith('**') && part.endsWith('**')) {
-        return <strong key={i} style={{ color: 'var(--text-primary)', fontWeight: 600 }}>{part.slice(2,-2)}</strong>
+        return <strong key={i} style={{ color: 'var(--text-primary)', fontWeight: 650 }}>{part.slice(2,-2)}</strong>
       }
       return <span key={i}>{part}</span>
     })
@@ -1283,27 +1378,54 @@ export default function SandboxView() {
     if (!Array.isArray(blocks)) return null
 
     return (
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
         {blocks.map((block, i) => {
           if (!block) return null
 
           if (block.type === 'heading') return (
-            <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8, paddingBottom: 8, borderBottom: '1px solid var(--border-subtle)' }}>
-              {block.icon && <span style={{ fontSize: 18 }}>{block.icon}</span>}
-              <span style={{ fontSize: 15.5, fontWeight: 700, color: 'var(--text-primary)', letterSpacing: '-0.2px' }}>{block.text}</span>
+            <div key={i} style={{
+              display: 'flex', alignItems: 'center', gap: 10,
+              paddingBottom: 10, borderBottom: '1px solid var(--border-subtle)',
+              marginBottom: 2
+            }}>
+              {block.icon && (
+                <div style={{
+                  width: 32, height: 32, borderRadius: 8,
+                  background: 'rgba(99, 102, 241, 0.08)',
+                  border: '1px solid rgba(99, 102, 241, 0.22)',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  flexShrink: 0
+                }}>
+                  {renderIcon(block.icon, 16)}
+                </div>
+              )}
+              <span style={{ fontSize: 16, fontWeight: 700, color: 'var(--text-primary)', letterSpacing: '-0.2px' }}>{block.text}</span>
             </div>
           )
 
           if (block.type === 'text') return (
-            <p key={i} style={{ margin: 0, fontSize: 13.5, lineHeight: 1.7, color: 'var(--text-secondary)' }}>{inlineRich(block.text)}</p>
+            <p key={i} style={{ margin: 0, fontSize: 14, lineHeight: 1.7, color: 'var(--text-secondary)' }}>{inlineRich(block.text)}</p>
           )
 
           if (block.type === 'alert') {
             const v = VARIANT_STYLES[block.variant] || VARIANT_STYLES.info
+            const AlertIconComponent = v.Icon || Info
             return (
-              <div key={i} style={{ display: 'flex', gap: 10, alignItems: 'flex-start', background: v.bg, border: `1px solid ${v.border}`, borderRadius: 10, padding: '11px 14px' }}>
-                <span style={{ fontSize: 15, lineHeight: 1, flexShrink: 0, marginTop: 1 }}>{v.icon}</span>
-                <span style={{ fontSize: 13.5, color: v.color, lineHeight: 1.65 }}>{inlineRich(block.text)}</span>
+              <div key={i} style={{
+                display: 'flex', gap: 12, alignItems: 'flex-start',
+                background: v.bg, border: `1px solid ${v.border}`,
+                borderRadius: 10, padding: '12px 16px',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.04)'
+              }}>
+                <div style={{
+                  width: 24, height: 24, borderRadius: 6,
+                  background: `${v.color}15`,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  flexShrink: 0, marginTop: 1
+                }}>
+                  <AlertIconComponent size={14} style={{ color: v.color }} />
+                </div>
+                <span style={{ fontSize: 13.5, color: v.color, lineHeight: 1.65, fontWeight: 450 }}>{inlineRich(block.text)}</span>
               </div>
             )
           }
@@ -1382,13 +1504,30 @@ export default function SandboxView() {
           )
 
           if (block.type === 'bullets') return (
-            <ul key={i} style={{ margin: 0, padding: 0, listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 6 }}>
-              {(block.items || []).map((item, j) => (
-                <li key={j} style={{ display: 'flex', alignItems: 'flex-start', gap: 8, fontSize: 13.5, color: 'var(--text-secondary)', lineHeight: 1.6 }}>
-                  <span style={{ color: 'var(--accent-cyan)', marginTop: 1, flexShrink: 0, fontSize: 16, lineHeight: 1 }}>›</span>
-                  <span>{inlineRich(String(item))}</span>
-                </li>
-              ))}
+            <ul key={i} style={{ margin: 0, padding: 0, listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 8 }}>
+              {(block.items || []).map((item, j) => {
+                const cleanItem = String(item).replace(/^[\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F600}-\u{1F64F}\u{1F680}-\u{1F6FF}]\s*/u, '')
+                return (
+                  <li key={j} style={{
+                    display: 'flex', alignItems: 'flex-start', gap: 10,
+                    fontSize: 13.5, color: 'var(--text-secondary)', lineHeight: 1.6,
+                    background: 'rgba(255,255,255,0.018)',
+                    border: '1px solid var(--border-subtle)',
+                    borderRadius: 8, padding: '9px 13px'
+                  }}>
+                    <div style={{
+                      width: 18, height: 18, borderRadius: '50%',
+                      background: 'rgba(0, 210, 255, 0.12)',
+                      border: '1px solid rgba(0, 210, 255, 0.3)',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      flexShrink: 0, marginTop: 2
+                    }}>
+                      <Check size={11} style={{ color: 'var(--accent-cyan)' }} />
+                    </div>
+                    <span style={{ flex: 1 }}>{inlineRich(cleanItem)}</span>
+                  </li>
+                )
+              })}
             </ul>
           )
 
@@ -1402,19 +1541,32 @@ export default function SandboxView() {
           )
 
           if (block.type === 'suggestions') return (
-            <div key={i} style={{ marginTop: 6, paddingTop: 10, borderTop: '1px solid var(--border-subtle)' }}>
-              <div style={{ fontSize: 11, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: 8, fontWeight: 600 }}>Suggested Questions:</div>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+            <div key={i} style={{ marginTop: 6, paddingTop: 12, borderTop: '1px solid var(--border-subtle)' }}>
+              <div style={{ fontSize: 11, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: 8, fontWeight: 600 }}>Suggested Follow-Ups:</div>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 7 }}>
                 {(block.items || []).map((s, si) => (
                   <button
                     key={si}
                     type="button"
                     onClick={() => onAskQuestion && onAskQuestion(s)}
-                    style={{ background: 'rgba(147,51,234,0.09)', border: '1px solid rgba(147,51,234,0.25)', color: '#c084fc', padding: '5px 12px', borderRadius: 16, fontSize: 12, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 5, transition: 'all 0.15s ease' }}
-                    onMouseEnter={e => { e.currentTarget.style.background = 'rgba(147,51,234,0.22)'; e.currentTarget.style.borderColor = 'rgba(147,51,234,0.5)' }}
-                    onMouseLeave={e => { e.currentTarget.style.background = 'rgba(147,51,234,0.09)'; e.currentTarget.style.borderColor = 'rgba(147,51,234,0.25)' }}
+                    style={{
+                      background: 'rgba(147,51,234,0.08)',
+                      border: '1px solid rgba(147,51,234,0.25)',
+                      color: '#c084fc',
+                      padding: '6px 13px',
+                      borderRadius: 16,
+                      fontSize: 12.5,
+                      cursor: 'pointer',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: 6,
+                      transition: 'all 0.15s ease'
+                    }}
+                    onMouseEnter={e => { e.currentTarget.style.background = 'rgba(147,51,234,0.18)'; e.currentTarget.style.borderColor = 'rgba(147,51,234,0.5)' }}
+                    onMouseLeave={e => { e.currentTarget.style.background = 'rgba(147,51,234,0.08)'; e.currentTarget.style.borderColor = 'rgba(147,51,234,0.25)' }}
                   >
-                    <span>💬</span> <span>{s}</span>
+                    <MessageSquare size={12} style={{ color: '#c084fc' }} />
+                    <span>{s}</span>
                   </button>
                 ))}
               </div>
@@ -1478,21 +1630,23 @@ export default function SandboxView() {
               </span>
             </div>
 
-            <div className="chat-window" style={{ flex: 1, overflowY: 'auto', padding: '20px 0', display: 'flex', flexDirection: 'column', gap: 16, maxHeight: '60vh' }}>
+            <div className="chat-window" style={{ flex: 1, overflowY: 'auto', padding: '20px 0', display: 'flex', flexDirection: 'column', gap: 18, maxHeight: '60vh' }}>
               {chatLog.map((msg, i) => (
-                <div key={i} style={{ display: 'flex', gap: 14, alignItems: 'flex-start', alignSelf: msg.role === 'user' ? 'flex-end' : 'flex-start', maxWidth: '92%', width: msg.type === 'report' ? '100%' : 'auto' }}>
+                <div key={i} style={{ display: 'flex', gap: 14, alignItems: 'flex-start', alignSelf: msg.role === 'user' ? 'flex-end' : 'flex-start', maxWidth: '94%', width: msg.type === 'report' ? '100%' : 'auto' }}>
                   {msg.role === 'ai' && (
-                    <div style={{ width: 34, height: 34, borderRadius: '50%', background: 'linear-gradient(135deg, #1d4ed8, #9333ea, #e11d48)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', flexShrink: 0, boxShadow: 'var(--shadow-sm)' }}>
-                      <Sparkles size={18} />
+                    <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'linear-gradient(135deg, #1d4ed8, #9333ea, #e11d48)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', flexShrink: 0, boxShadow: 'var(--shadow-sm)' }}>
+                      <Bot size={19} />
                     </div>
                   )}
                   <div style={{
-                    background: msg.role === 'user' ? 'var(--bg-card-h)' : 'transparent',
-                    border: msg.role === 'user' ? '1px solid var(--border-subtle)' : 'none',
-                    padding: msg.role === 'user' ? '12px 18px' : '4px 0 0 0',
-                    borderRadius: msg.role === 'user' ? 20 : 0,
-                    fontSize: 14.5, color: 'var(--text-primary)', lineHeight: 1.7,
-                    width: msg.type === 'report' ? '100%' : undefined
+                    background: msg.role === 'user' ? 'var(--bg-card-h)' : msg.type === 'report' ? 'transparent' : 'var(--bg-card)',
+                    border: msg.type === 'report' ? 'none' : '1px solid var(--border-subtle)',
+                    padding: msg.type === 'report' ? '0' : '16px 20px',
+                    borderRadius: 14,
+                    fontSize: 14, color: 'var(--text-primary)', lineHeight: 1.7,
+                    width: msg.type === 'report' ? '100%' : undefined,
+                    maxWidth: msg.type === 'report' ? '100%' : '780px',
+                    boxShadow: msg.type === 'report' ? 'none' : 'var(--shadow-sm)'
                   }}>
                     {msg.type === 'report' ? (
                       <AnalysisReport parseResult={msg.parseResult} analysis={msg.analysis} />
@@ -1504,11 +1658,12 @@ export default function SandboxView() {
               ))}
               {isAnalyzing && (
                 <div style={{ display: 'flex', gap: 14, alignItems: 'center' }}>
-                  <div style={{ width: 34, height: 34, borderRadius: '50%', background: 'linear-gradient(135deg, #1d4ed8, #9333ea, #e11d48)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', flexShrink: 0 }}>
-                    <Sparkles size={18} />
+                  <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'linear-gradient(135deg, #1d4ed8, #9333ea, #e11d48)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', flexShrink: 0 }}>
+                    <Bot size={19} />
                   </div>
-                  <div style={{ color: 'var(--text-muted)', fontSize: 13, fontStyle: 'italic', animation: 'pulse-orb 2s infinite' }}>
-                    Running log analysis pipeline…
+                  <div style={{ color: 'var(--text-muted)', fontSize: 13.5, fontStyle: 'italic', display: 'flex', alignItems: 'center', gap: 8 }}>
+                    <RefreshCw size={14} className="spin" style={{ color: 'var(--accent-cyan)' }} />
+                    Running forensic log analysis pipeline…
                   </div>
                 </div>
               )}
@@ -1794,10 +1949,10 @@ export default function SandboxView() {
                       Select a detection test case or enter custom parameters, then click <strong>Run Local Threat Analysis</strong>. The engine normalizes inputs, extracts structural features, and calculates risk scores locally without network transmission.
                     </div>
                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, justifyContent: 'center' }}>
-                      <span style={{ fontSize: 11, background: 'var(--bg-input)', border: '1px solid var(--border-subtle)', padding: '3px 10px', borderRadius: 12, color: 'var(--text-secondary)' }}>🔒 Zero Outbound Traffic</span>
-                      <span style={{ fontSize: 11, background: 'var(--bg-input)', border: '1px solid var(--border-subtle)', padding: '3px 10px', borderRadius: 12, color: 'var(--text-secondary)' }}>📊 Dynamic Risk Scoring</span>
-                      <span style={{ fontSize: 11, background: 'var(--bg-input)', border: '1px solid var(--border-subtle)', padding: '3px 10px', borderRadius: 12, color: 'var(--text-secondary)' }}>🎯 Strict Confidence Separation</span>
-                      <span style={{ fontSize: 11, background: 'var(--bg-input)', border: '1px solid var(--border-subtle)', padding: '3px 10px', borderRadius: 12, color: 'var(--text-secondary)' }}>🔍 Full Evidence Provenance</span>
+                      <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 11, background: 'var(--bg-input)', border: '1px solid var(--border-subtle)', padding: '4px 10px', borderRadius: 12, color: 'var(--text-secondary)' }}><Lock size={12} style={{ color: '#38bdf8' }} /> Zero Outbound Traffic</span>
+                      <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 11, background: 'var(--bg-input)', border: '1px solid var(--border-subtle)', padding: '4px 10px', borderRadius: 12, color: 'var(--text-secondary)' }}><BarChart2 size={12} style={{ color: '#34d399' }} /> Dynamic Risk Scoring</span>
+                      <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 11, background: 'var(--bg-input)', border: '1px solid var(--border-subtle)', padding: '4px 10px', borderRadius: 12, color: 'var(--text-secondary)' }}><Target size={12} style={{ color: '#f59e0b' }} /> Strict Confidence Separation</span>
+                      <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 11, background: 'var(--bg-input)', border: '1px solid var(--border-subtle)', padding: '4px 10px', borderRadius: 12, color: 'var(--text-secondary)' }}><Search size={12} style={{ color: '#c084fc' }} /> Full Evidence Provenance</span>
                     </div>
                   </div>
                 ) : (
