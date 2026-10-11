@@ -21,11 +21,6 @@ const detailedLearning = {
       "**Step 2: Parsing.** Apply a compiled regular expression to extract key components like IP, timestamp, request URL, status code, and user agent.",
       "**Step 3: Profiling.** Calculate summary statistics for each extracted field, including total count, unique values, and missing value percentages.",
       "**Step 4: Anomaly Detection.** Identify initial structural anomalies, such as malformed URLs or unexpected characters in standard headers, documenting them for the preprocessing phase."
-    ],
-    viva_questions: [
-      { q: "Why is the generator pattern preferred over loading the entire log file into memory?", a: "Generators yield one item at a time, keeping the memory footprint constant (O(1) space complexity) regardless of the file size, which is essential for processing massive log files that exceed available RAM." },
-      { q: "Explain the concept of 'Missing Not at Random' (MNAR) in the context of web logs.", a: "MNAR means the missingness is related to the data itself. In web logs, an automated attack script might deliberately not send a 'User-Agent' or 'Accept-Language' header. Thus, the missing value is not a random error but a direct indicator of malicious behavior." },
-      { q: "How do regular expressions impact the time complexity of log parsing?", a: "Poorly constructed regular expressions can lead to catastrophic backtracking, resulting in exponential time complexity O(2^n). Using optimized, pre-compiled regex with atomic groups ensures linear O(n) parsing time per line." }
     ]
   },
   2: {
@@ -42,11 +37,6 @@ const detailedLearning = {
       "**Step 3: URL Decomposition.** Parse the request URL to separate the base path from query parameters, creating new columns for 'param_key' and 'param_value'.",
       "**Step 4: Memory Optimization.** Convert nominal categorical variables like HTTP methods to Pandas `category` types to minimize memory usage.",
       "**Step 5: Serialization.** Export the structured DataFrame to a CSV or Parquet file for efficient downstream consumption."
-    ],
-    viva_questions: [
-      { q: "What is the advantage of vectorization in Pandas over iterative loops?", a: "Vectorization delegates operations to highly optimized, pre-compiled C code under the hood, allowing operations to be performed on entire arrays simultaneously rather than iterating element-by-element in slow Python loops." },
-      { q: "Why is handling timezones explicitly crucial in security data engineering?", a: "Cyber attacks are global. If logs from servers in different regions aren't normalized to a single timezone (like UTC), correlating events temporally to track the lateral movement of an attacker becomes impossible." },
-      { q: "How does converting strings to 'category' types save memory?", a: "Instead of storing the full string (e.g., 'GET' or 'POST') for every single row, categorical types store a dictionary mapping integers to strings (e.g., 0='GET', 1='POST') and use a small integer array for the data, massively reducing storage for low-cardinality columns." }
     ]
   },
   3: {
@@ -62,11 +52,6 @@ const detailedLearning = {
       "**Step 2: Null Handling.** Impute missing values in structural columns (like target_ip) with a designated placeholder ('0.0.0.0').",
       "**Step 3: Deduplication.** Identify and remove exact duplicate rows that may have resulted from logging errors or retries, ensuring they don't skew event frequencies.",
       "**Step 4: Case Normalization.** Convert all text fields (like URLs and User-Agents) to lowercase to ensure consistency during string matching and feature extraction."
-    ],
-    viva_questions: [
-      { q: "Why might an attacker use double URL encoding, and how does your cleaning process address it?", a: "Attackers use double encoding (e.g., encoding '%' as '%25') to bypass rudimentary security filters that only decode once. A robust cleaning process uses recursive decoding until the string no longer changes." },
-      { q: "In what scenario is replacing missing values with the mean inappropriate?", a: "Mean imputation is inappropriate for categorical data, heavily skewed numerical distributions (where median is better), or when the data is Missing Not at Random (MNAR), where the absence itself is a signal that would be destroyed by imputation." },
-      { q: "What is the difference between Min-Max scaling and Z-score standardization?", a: "Min-Max scaling binds values between a specific range (usually 0 and 1), which is useful for neural networks. Z-score standardization centers data around a mean of 0 with a standard deviation of 1, which is better for algorithms that assume normally distributed data and handles outliers more gracefully." }
     ]
   },
   4: {
@@ -82,11 +67,6 @@ const detailedLearning = {
       "**Step 2: Heuristic Rule Application.** Iterate through the decoded payloads and User-Agents, applying the regex signatures to categorize each row.",
       "**Step 3: Multi-class to Binary Mapping.** Create a high-level binary target variable (`is_attack`: 1 or 0) from the specific granular threat categories.",
       "**Step 4: Validation.** Sample the labeled data and manually verify a subset to calculate the labeling error rate and refine the regex rules."
-    ],
-    viva_questions: [
-      { q: "What is the primary limitation of signature-based labeling?", a: "Signature-based detection cannot identify zero-day attacks or highly obfuscated variants of known attacks that alter their syntax just enough to bypass the specific regex rule." },
-      { q: "Why do we create both granular categories (e.g., 'SQLi', 'XSS') and a binary label ('is_attack')?", a: "The binary label simplifies the problem for basic binary classification models (Attack vs. Benign). Granular labels allow for more advanced multi-class classification and detailed threat intelligence reporting on *what kind* of attacks are prevalent." },
-      { q: "How would you handle a log entry that matches both an SQLi signature and an XSS signature?", a: "You must establish a precedence hierarchy based on severity (e.g., RCE > SQLi > XSS), assign a multi-label format, or categorize it as a 'Compound Attack' depending on the specific ML architecture being utilized." }
     ]
   },
   5: {
@@ -102,11 +82,6 @@ const detailedLearning = {
       "**Step 2: Information Theoretic Features.** Implement a function to calculate the Shannon Entropy of the decoded payload string.",
       "**Step 3: Temporal Features.** Sort the dataset by IP and Timestamp, then use `shift()` operations to calculate the exact time difference (in milliseconds) between consecutive requests per IP.",
       "**Step 4: Behavioral Features.** Flag known headless automated tools (e.g., `curl`, `python-requests`) based on User-Agent string analysis."
-    ],
-    viva_questions: [
-      { q: "What is Shannon Entropy and why is it a good feature for detecting attacks?", a: "Shannon Entropy measures the randomness of data. Attackers often use Base64 encoding, encryption, or heavy obfuscation to hide payloads, which results in a high entropy value compared to the predictable, low-entropy structure of normal English words or URLs." },
-      { q: "How do you calculate the velocity of requests for a specific IP address?", a: "By grouping the data by IP address, sorting chronologically by timestamp, and calculating the time delta between the current row and the previous row (`df.groupby('ip')['timestamp'].diff()`). A consistently near-zero delta strongly indicates a bot." },
-      { q: "What is the 'curse of dimensionality' and how does feature engineering help?", a: "The curse refers to the fact that as the number of features increases, the data space becomes exponentially sparse, requiring exponentially more data to train models effectively. Feature engineering condenses complex text into a few highly informative numerical features, reducing dimensionality while maximizing predictive power." }
     ]
   },
   6: {
@@ -122,11 +97,6 @@ const detailedLearning = {
       "**Step 2: Undersampling.** Utilize `imblearn` or Pandas sampling methods to randomly select a subset of the benign traffic equal in size to the attack traffic.",
       "**Step 3: Verification.** Verify that the resulting dataset has a perfect 1:1 distribution ratio.",
       "**Step 4: Metric Realignment.** Shift the evaluation strategy away from Accuracy toward F1-Score, Precision-Recall AUC, and the Confusion Matrix."
-    ],
-    viva_questions: [
-      { q: "Why is accuracy a terrible metric for a real-world Intrusion Detection System?", a: "Because real-world traffic is heavily skewed (e.g., 99.9% benign). A broken system that always says 'benign' will be 99.9% accurate while allowing 100% of attacks to succeed. This is the accuracy paradox." },
-      { q: "What is the primary risk of using Random Oversampling to balance a dataset?", a: "Random oversampling simply duplicates existing minority class rows. This can lead to severe overfitting, where the model memorizes those specific duplicated examples rather than learning generalizable patterns, failing when exposed to novel attack variants." },
-      { q: "Explain briefly how SMOTE generates synthetic data.", a: "SMOTE selects a minority class instance, finds its k-nearest minority class neighbors, and then creates synthetic data points randomly along the geometric line segments connecting the instance to its neighbors in the feature space." }
     ]
   },
   7: {
@@ -142,11 +112,6 @@ const detailedLearning = {
       "**Step 2: Metric Aggregation.** Calculate total requests, total confirmed attacks, and the unique count of user-agents (`nunique`) for each IP.",
       "**Step 3: Ratio Calculation.** Compute the 'Malicious Ratio' (attacks / total requests) to determine the persistence and intent of the actor.",
       "**Step 4: Pivot Cross-Tabulation.** Create a pivot table showing the frequency of each specific attack category (SQLi, XSS, etc.) deployed by the top 10 most aggressive IPs."
-    ],
-    viva_questions: [
-      { q: "What is the difference between a groupby operation and a pivot table?", a: "A groupby operation groups data by one or more keys and applies an aggregation function, returning a one-dimensional grouped index. A pivot table reshapes the data, placing one categorical variable on the rows and another on the columns, creating a two-dimensional matrix of aggregated values." },
-      { q: "Why is tracking the number of unique User-Agents for a single IP address useful?", a: "Normal users typically browse with a single browser, meaning their IP will show 1 or 2 distinct User-Agents. If a single IP exhibits 50 different User-Agents in an hour, it definitively indicates an automated script rotating agents to evade fingerprinting." },
-      { q: "How can entity aggregation detect a 'low-and-slow' attack?", a: "A low-and-slow attack sends malicious requests very infrequently to avoid triggering rate limits. While individual requests look benign, aggregating data over a week for that IP might reveal a pattern of probing specific vulnerable endpoints that becomes statistically significant at the macro level." }
     ]
   },
   8: {
@@ -162,11 +127,6 @@ const detailedLearning = {
       "**Step 2: Distribution Analysis.** Use Seaborn's KDE plot to visualize the distribution of Shannon Entropy, clearly illustrating the bimodal separation of classes.",
       "**Step 3: Correlation Matrix.** Compute the Pearson correlation coefficient matrix for all numerical features and render it as an annotated Seaborn heatmap.",
       "**Step 4: Threat Taxonomy.** Generate a doughnut chart visualizing the proportional breakdown of specific attack categories."
-    ],
-    viva_questions: [
-      { q: "What is the purpose of a Kernel Density Estimation (KDE) plot compared to a standard histogram?", a: "A histogram bins continuous data into discrete intervals, making the shape heavily dependent on the chosen bin width. A KDE plot uses a smoothing kernel to create a continuous curve representing the true underlying probability density, offering a clearer, bin-independent view of the distribution." },
-      { q: "Why is it important to check for highly correlated features using a heatmap before training a model?", a: "Highly correlated features (multicollinearity) offer redundant information, unnecessarily increasing the dimensionality of the model. Furthermore, in models like Linear or Logistic Regression, multicollinearity can cause unstable coefficient estimates, making it impossible to interpret feature importance." },
-      { q: "How does visualizing temporal data (time-series) help in cybersecurity?", a: "Cyber attacks are rarely uniform. Visualizing traffic over time reveals critical patterns like automated surges at 3:00 AM, the duration of DDoS campaigns, or the synchronization of botnets, which static aggregate statistics completely hide." }
     ]
   },
   9: {
@@ -183,11 +143,6 @@ const detailedLearning = {
       "**Step 3: Training & Prediction.** Fit the models to the training data (X_train, y_train) and generate probability predictions on the test set (X_test).",
       "**Step 4: Metric Evaluation.** Calculate Accuracy, Precision, Recall, F1-Score, and the ROC-AUC score.",
       "**Step 5: Feature Importance.** Extract Gini importance from the Random Forest to rank which engineered features contributed most to the model's decisions."
-    ],
-    viva_questions: [
-      { q: "Why is a Random Forest generally preferred over a single Decision Tree for security classification?", a: "A single Decision Tree is highly prone to overfitting; it memorizes the training data perfectly but fails on new, unseen attack variants. Random Forest, by averaging the predictions of many decorrelated trees, drastically reduces this variance, leading to much better generalization." },
-      { q: "In the context of a Security Operations Center (SOC), would you prioritize Precision or Recall?", a: "It depends on the SOC's resources, but usually, a balance leaning towards Precision is required. If a model has high Recall but terrible Precision, it will generate thousands of False Positives. This causes 'alert fatigue', where security analysts become overwhelmed and begin ignoring alerts, eventually missing real attacks." },
-      { q: "What does the Area Under the Receiver Operating Characteristic Curve (ROC-AUC) measure?", a: "ROC-AUC measures the model's ability to discriminate between the two classes across all possible classification thresholds. An AUC of 0.5 indicates random guessing, while 1.0 indicates perfect separation. It is an excellent metric for evaluating model robustness on imbalanced data." }
     ]
   },
   10: {
@@ -204,11 +159,6 @@ const detailedLearning = {
       "**Step 3: Micro-batch Ingestion.** Simulate a real-time data stream by feeding the pipeline chunks (e.g., 1000 rows at a time) from the raw log file.",
       "**Step 4: Benchmarking.** Instrument the pipeline with `time.time()` to measure exact latency per micro-batch and calculate overall throughput (records/second).",
       "**Step 5: Alert Generation.** Write logic that triggers a high-severity alert whenever the model's prediction probability exceeds a defined threshold (e.g., 0.85)."
-    ],
-    viva_questions: [
-      { q: "What is the danger of using 'Pickle' to load models in a production environment?", a: "Pickle files can execute arbitrary code during the unpickling process. If a malicious actor can replace the model.pkl file on the server, loading it will result in Remote Code Execution (RCE). Models should be verified via cryptographic hashes or stored in safer formats like ONNX." },
-      { q: "How does feature engineering differ in a real-time streaming pipeline compared to a batch Jupyter Notebook?", a: "In a notebook, you have the entire dataset and can do global operations like standardizing a column by dividing by the dataset's global maximum. In a real-time stream, you only see one request at a time. You must use pre-computed scaling factors (saved during training) to scale new data points." },
-      { q: "If your real-time pipeline is processing 1,000 records per second, what is the average latency per record?", a: "If 1,000 records are processed in 1 second (1000 milliseconds), the average latency per record is 1 millisecond." }
     ]
   }
 };

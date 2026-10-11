@@ -16,8 +16,8 @@ import os
 import re
 import pandas as pd
 
-INPUT_FILE = "data/" if os.path.exists("data/") else "../data/cleaned_logs_sample.csv"
-OUTPUT_FILE = "data/" if os.path.exists("data/") else "../data/labeled_logs_sample.csv"
+INPUT_FILE = "data/cleaned_logs_sample.csv" if os.path.exists("data") else "../data/cleaned_logs_sample.csv"
+OUTPUT_FILE = "data/labeled_logs_sample.csv" if os.path.exists("data") else "../data/labeled_logs_sample.csv"
 
 # Pre-compiled regex patterns for attack classification
 SQLI_PATTERN = re.compile(r"('|--|union\s+select|select\s+.*from|sleep\(|benchmark\(|order\s+by|\b1=1\b|or\s+true)", re.IGNORECASE)

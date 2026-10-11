@@ -14,8 +14,8 @@ import os
 import urllib.parse
 import pandas as pd
 
-INPUT_FILE = "data/" if os.path.exists("data/") else "../data/structured_logs_sample.csv"
-OUTPUT_FILE = "data/" if os.path.exists("data/") else "../data/cleaned_logs_sample.csv"
+INPUT_FILE = "data/structured_logs_sample.csv" if os.path.exists("data") else "../data/structured_logs_sample.csv"
+OUTPUT_FILE = "data/cleaned_logs_sample.csv" if os.path.exists("data") else "../data/cleaned_logs_sample.csv"
 
 def clean_and_preprocess(df):
     initial_rows = len(df)

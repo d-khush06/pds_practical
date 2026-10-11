@@ -246,13 +246,6 @@ document.addEventListener('DOMContentLoaded', () => {
       </div>
     `).join('');
 
-    const vivaHtml = (l.viva_questions || []).map(v => `
-      <div class="viva-card">
-        <div class="viva-q">${icon('help-circle', 15)}<span>${escHtml(v.q)}</span></div>
-        <div class="viva-a"><strong>Answer:</strong> ${escHtml(v.a)}</div>
-      </div>
-    `).join('');
-
     // Build practical-specific data examples table
     const exampleHtml = buildExamplesTable(p);
 
@@ -302,15 +295,6 @@ document.addEventListener('DOMContentLoaded', () => {
         <div class="learning-body">
           <div style="display:flex;flex-direction:column;gap:8px;">${stepsHtml}</div>
         </div>
-      </div>
-
-      <!-- Viva Q&A -->
-      <div class="learning-section">
-        <div class="learning-section-header">
-          ${icon('crosshair', 18)}
-          <span class="ls-title">4. Viva &amp; Interview Q&amp;A</span>
-        </div>
-        <div class="learning-body">${vivaHtml}</div>
       </div>
     `;
   }

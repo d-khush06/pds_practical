@@ -30,7 +30,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, confusion_matrix, classification_report, roc_curve, auc
 
-INPUT_FILE = "data/" if os.path.exists("data/") else "../data/balanced_dataset_sample.csv"
+INPUT_FILE = "data/balanced_dataset_sample.csv" if os.path.exists("data") else "../data/balanced_dataset_sample.csv"
 FIGURES_DIR = "figures" if os.path.exists("figures") else "../figures"
 OUTPUTS_DIR = "outputs" if os.path.exists("outputs") else "../outputs"
 

@@ -2,7 +2,7 @@
   "name": "pds-analytics-dashboard",
   "version": "1.0.0",
   "scripts": {
-    "dev": "parcel src/index.html --port 5173",
+    "dev": "react-scripts start",
     "build": "react-scripts build",
     "preview": "vite preview",
     "start": "react-scripts start"

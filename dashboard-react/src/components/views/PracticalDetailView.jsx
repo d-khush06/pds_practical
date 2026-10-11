@@ -4,7 +4,7 @@ import { Bar, Line, Doughnut } from 'react-chartjs-2'
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, LineElement, PointElement, ArcElement, Filler, Tooltip, Legend, Title } from 'chart.js'
 import { CHART_CONFIGS, COVERS, EXAMPLES } from '../../data/chartConfigs'
 import { deepMerge, getChartBaseOptions } from '../../utils/helpers'
-import { Tag, Code2, BookOpen, BarChart2, Terminal, FileText, CheckCircle2, HelpCircle, Lightbulb, GitBranch, Cpu, Activity, ArrowLeft, Copy, Check, Database, Search, Shield, PieChart, Filter, Layers, Zap } from 'lucide-react'
+import { Tag, Code2, BookOpen, BarChart2, Terminal, FileText, CheckCircle2, Lightbulb, GitBranch, Cpu, Activity, ArrowLeft, Copy, Check, Database, Search, Shield, PieChart, Filter, Layers, Zap } from 'lucide-react'
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, LineElement, PointElement, ArcElement, Filler, Tooltip, Legend, Title)
 
@@ -219,24 +219,6 @@ function LearnTab({ p }) {
                 </div>
               ))}
             </div>
-          </div>
-        </div>
-      )}
-
-      {/* Viva Q&A */}
-      {l.viva_questions?.length > 0 && (
-        <div className="learn-section">
-          <div className="learn-section-h">
-            <HelpCircle size={18} style={{color:'var(--accent-amber)'}} />
-            <span className="learn-section-title">4. Viva &amp; Interview Q&amp;A</span>
-          </div>
-          <div className="learn-body">
-            {l.viva_questions.map((v,i) => (
-              <div key={i} className="viva-card">
-                <div className="viva-q"><HelpCircle size={15} style={{color:'var(--accent-indigo)',flexShrink:0}} /><span>{v.q}</span></div>
-                <div className="viva-a"><strong>Answer:</strong> {v.a}</div>
-              </div>
-            ))}
           </div>
         </div>
       )}

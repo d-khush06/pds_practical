@@ -14,8 +14,8 @@ import os
 import pandas as pd
 from sklearn.utils import resample
 
-INPUT_FILE = "data/" if os.path.exists("data/") else "../data/featured_logs_sample.csv"
-OUTPUT_BALANCED_FILE = "data/" if os.path.exists("data/") else "../data/balanced_dataset_sample.csv"
+INPUT_FILE = "data/featured_logs_sample.csv" if os.path.exists("data") else "../data/featured_logs_sample.csv"
+OUTPUT_BALANCED_FILE = "data/balanced_dataset_sample.csv" if os.path.exists("data") else "../data/balanced_dataset_sample.csv"
 
 def analyze_imbalance(df, label_col="is_attack"):
     counts = df[label_col].value_counts()

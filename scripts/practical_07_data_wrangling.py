@@ -11,7 +11,7 @@ Objective: Aggregate, group, and reshape data for cyber threat intelligence insi
 import os
 import pandas as pd
 
-INPUT_FILE = "data/" if os.path.exists("data/") else "../data/balanced_dataset_sample.csv"
+INPUT_FILE = "data/balanced_dataset_sample.csv" if os.path.exists("data") else "../data/balanced_dataset_sample.csv"
 OUTPUT_DIR = "outputs" if os.path.exists("outputs") else "../outputs"
 
 def wrangle_and_aggregate(df):

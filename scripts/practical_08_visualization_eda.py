@@ -18,7 +18,7 @@ import seaborn as sns
 import pandas as pd
 import numpy as np
 
-INPUT_FILE = "data/" if os.path.exists("data/") else "../data/balanced_dataset_sample.csv"
+INPUT_FILE = "data/balanced_dataset_sample.csv" if os.path.exists("data") else "../data/balanced_dataset_sample.csv"
 FIGURES_DIR = "figures" if os.path.exists("figures") else "../figures"
 
 # Professional styling

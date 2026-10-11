@@ -20,7 +20,7 @@ import json
 import pandas as pd
 
 LOG_FILE = "cj.log" if os.path.exists("cj.log") else "../cj.log"
-OUTPUT_SAMPLE = "data/" if os.path.exists("data/") else "../data/structured_logs_sample.csv"
+OUTPUT_SAMPLE = "data/structured_logs_sample.csv" if os.path.exists("data") else "../data/structured_logs_sample.csv"
 SAMPLE_SIZE = 50000
 
 def parse_logs_to_dataframe(filepath, limit=50000):

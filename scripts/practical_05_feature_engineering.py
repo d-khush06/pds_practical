@@ -18,8 +18,8 @@ import numpy as np
 import pandas as pd
 from collections import Counter
 
-INPUT_FILE = "data/" if os.path.exists("data/") else "../data/labeled_logs_sample.csv"
-OUTPUT_FILE = "data/" if os.path.exists("data/") else "../data/featured_logs_sample.csv"
+INPUT_FILE = "data/labeled_logs_sample.csv" if os.path.exists("data") else "../data/labeled_logs_sample.csv"
+OUTPUT_FILE = "data/featured_logs_sample.csv" if os.path.exists("data") else "../data/featured_logs_sample.csv"
 
 def calculate_shannon_entropy(text):
     """Calculates Shannon Entropy of a string to measure randomness/obfuscation."""

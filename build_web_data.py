@@ -41,10 +41,6 @@ PRACTICALS = [
                 "Execute reservoir stream sampling across the first 100,000 lines to assess JSON structural validity.",
                 "Extract 5 uniformly sampled records to inspect real payload variations (Nikto scans, shell commands, clean browser sessions).",
                 "Construct the canonical 8-field schema mapping table defining the analytical value of each attribute."
-            ],
-            "viva_questions": [
-                {"q": "Why is line-by-line reading preferred over df = pd.read_csv() for massive raw logs?", "a": "Line-by-line iteration consumes constant memory O(1), preventing heap exhaustion and memory crashes on large files."},
-                {"q": "What distinguishes structured, semi-structured, and unstructured log data?", "a": "Structured data adheres to rigid relational tables; semi-structured data contains self-describing tags or arrays (like JSON/XML); unstructured data consists of free-form, variable-delimiter text."}
             ]
         }
     },
@@ -80,10 +76,6 @@ PRACTICALS = [
                 "Assign standardized column identities: `client_ip`, `timestamp`, `param_key`, `param_value`, `client_port`, `user_agent`, `accept_language`, `target_ip`.",
                 "Compute non-null counts, null percentages, data type signatures, and deep memory usage.",
                 "Persist structured tabular dataset to `data/structured_logs_sample.csv`."
-            ],
-            "viva_questions": [
-                {"q": "What is the computational complexity difference between df.append() and pd.DataFrame(list_of_dicts)?", "a": "df.append() re-allocates memory for every row creating O(N^2) overhead, whereas pd.DataFrame(list_of_dicts) creates the contiguous memory block once in O(N)."},
-                {"q": "How does deep memory usage inspection in Pandas differ from shallow memory?", "a": "Shallow inspection only counts object reference pointers (8 bytes each); deep memory inspection traverses the heap to count the actual string byte lengths."}
             ]
         }
     },
@@ -120,10 +112,6 @@ PRACTICALS = [
                 "Sanitize `client_port` by coercing non-numeric entries to zero and casting to 64-bit integer.",
                 "Apply `urllib.parse.unquote()` to normalize payloads and lowercase all parameter keys.",
                 "Impute text nulls: replace NaN with `'none'` for parameters, `'unknown'` for user-agent, and `'missing'` for accept-language."
-            ],
-            "viva_questions": [
-                {"q": "Why is URL decoding critical before running security analysis on web logs?", "a": "Because attackers encode delimiters and SQL statements (like %27 for quotes or %20 for spaces) to bypass basic string filters."},
-                {"q": "What happens if pd.to_datetime encounters invalid date strings without errors='coerce'?", "a": "It raises a ParserError and halts execution. Setting errors='coerce' gracefully converts corrupted dates to NaT (Not-a-Time)."}
             ]
         }
     },
@@ -164,10 +152,6 @@ PRACTICALS = [
                 "Generate granular categorical label column: `attack_category`.",
                 "Generate binary machine learning target column: `is_attack` (0 = Benign, 1 = Malicious).",
                 "Audit frequency distributions and verify ground-truth integrity on sample payloads."
-            ],
-            "viva_questions": [
-                {"q": "What is the difference between signature-based detection and anomaly-based detection?", "a": "Signature detection searches for pre-defined exploit patterns (high accuracy, zero-day blind); anomaly detection identifies behavioral deviations from normal traffic (detects zero-days, higher false positives)."},
-                {"q": "Why are automated scanners classified as attack traffic even if they execute no exploit?", "a": "Automated scanners perform unauthorized reconnaissance to discover exploitable vectors and map attack surfaces."}
             ]
         }
     },
@@ -207,10 +191,6 @@ PRACTICALS = [
                 "Compute structural properties: `payload_length`, `key_length`, and `special_char_ratio`.",
                 "Fingerprint client software: `is_scanner_ua`, `is_headless_tool`, and `has_accept_lang`.",
                 "Calculate Pearson correlation coefficients against `is_attack`."
-            ],
-            "viva_questions": [
-                {"q": "What does high Shannon entropy in an HTTP request payload indicate?", "a": "High entropy indicates randomness or compression, commonly associated with obfuscated shellcode, base64 payloads, or random parameter fuzzing."},
-                {"q": "Why is inter-arrival time (time_diff_sec) capped between 0 and 3600 seconds?", "a": "Capping prevents extreme outliers from long-inactive sessions from distorting variance and gradient descent convergence."}
             ]
         }
     },
@@ -248,10 +228,6 @@ PRACTICALS = [
                 "Apply Random Oversampling of the minority class for benchmarking.",
                 "Verify stratified balance: exactly 15,896 Benign and 15,896 Attack records (1:1 ratio).",
                 "Persist balanced dataset to `data/balanced_dataset_sample.csv`."
-            ],
-            "viva_questions": [
-                {"q": "What is the primary danger of training an attack classifier on an imbalanced dataset?", "a": "The model will develop a majority-class bias, yielding high overall accuracy but low recall on critical security threats."},
-                {"q": "When is undersampling preferred over SMOTE or oversampling?", "a": "When the dataset is sufficiently large that discarding majority samples does not cause information loss, and when computational speed is prioritized."}
             ]
         }
     },
@@ -288,10 +264,6 @@ PRACTICALS = [
                 "Set `datetime` as index and execute `df.resample('1h')` to track hourly assault waves.",
                 "Construct pivot tables cross-tabulating attack categories across hours and top threat hosts.",
                 "Export aggregated summaries to `outputs/p07_ip_aggregation.csv` and `outputs/p07_hourly_summary.csv`."
-            ],
-            "viva_questions": [
-                {"q": "How does groupby().agg() differ from pivot_table() in Pandas?", "a": "groupby().agg() summarizes data into a 1D index grouping, whereas pivot_table() reshapes data across two distinct axes (rows and columns) for multi-dimensional cross-tabulation."},
-                {"q": "Why is user-agent cardinality per IP a valuable forensic indicator?", "a": "Benign clients usually have 1-2 user agents; high user-agent cardinality from a single IP indicates automated fuzzing or bot rotation."}
             ]
         }
     },
@@ -329,10 +301,6 @@ PRACTICALS = [
                 "Construct Subplot C: Proportional attack category distribution donut chart.",
                 "Construct Subplot D: Kernel Density Estimate (KDE) demonstrating Shannon entropy separation.",
                 "Export complete multi-panel dashboard to `figures/p08_eda_dashboard.png`."
-            ],
-            "viva_questions": [
-                {"q": "Why is matplotlib.use('Agg') necessary in automated data pipelines?", "a": "Agg is a non-interactive backend that renders directly to file formats without requiring an active graphical display server or window manager."},
-                {"q": "What insight does the Shannon Entropy KDE curve provide about attacks?", "a": "It proves that attack payloads possess a higher, distinct entropy distribution compared to benign text, validating its utility as a machine learning feature."}
             ]
         }
     },
@@ -376,10 +344,6 @@ PRACTICALS = [
                 "Train Random Forest Classifier with 100 estimators (Accuracy = 99.21%, F1 = 99.21%).",
                 "Compute Confusion Matrix, ROC curves, and Gini feature importances (`is_scanner_ua` accounts for 43.78% of decision weight).",
                 "Export evaluation triad visualization to `figures/p09_model_evaluation.png`."
-            ],
-            "viva_questions": [
-                {"q": "Why is Random Forest well-suited for cyber threat detection?", "a": "It handles non-linear boundaries, resists overfitting through bagging, does not require strict feature scaling, and measures feature importance directly."},
-                {"q": "What is the difference between Type I (False Positive) and Type II (False Negative) errors in security?", "a": "A Type I error blocks legitimate user traffic; a Type II error permits a malicious attack to breach the system undetected."}
             ]
         }
     },
@@ -417,10 +381,6 @@ PRACTICALS = [
                 "Simulate real-time streaming inference with diverse synthetic events (SQLi, DirBuster, RCE, XSS, Benign).",
                 "Measure per-stage latency and benchmark throughput (~7,400 events/second).",
                 "Export pipeline benchmarks chart to `figures/p10_pipeline_throughput.png`."
-            ],
-            "viva_questions": [
-                {"q": "What is data leakage and how does a modular pipeline prevent it?", "a": "Data leakage occurs when testing or future data influences training preprocessing. An encapsulated pipeline ensures transformers and scalers are fitted solely on training splits."},
-                {"q": "How does the pipeline handle real-time streaming inference on unseen logs?", "a": "The predict_stream() method extracts the exact 12 features on-the-fly and passes the single-row vector to the fitted model in sub-millisecond time."}
             ]
         }
     }
