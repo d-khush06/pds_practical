@@ -132,18 +132,18 @@ function Badge({ text, color, bg }) {
 function MetricCard({ label, value, sub, icon: Icon, color = '#60a5fa', unavailable = false }) {
   return (
     <div style={{
-      background: 'var(--bg-input)', padding: '14px 16px', borderRadius: 10,
+      background: 'var(--bg-input)', padding: '8px 12px', borderRadius: 8,
       border: `1px solid ${unavailable ? 'var(--border-subtle)' : 'var(--border-medium)'}`,
-      display: 'flex', flexDirection: 'column', gap: 6
+      display: 'flex', flexDirection: 'column', gap: 3
     }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 11, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-        {Icon && <Icon size={12} style={{ color: unavailable ? 'var(--text-muted)' : color }} />}
-        {label}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 10, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.4px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+        {Icon && <Icon size={11} style={{ color: unavailable ? 'var(--text-muted)' : color, flexShrink: 0 }} />}
+        <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{label}</span>
       </div>
-      <div style={{ fontSize: unavailable ? 13 : 20, fontWeight: unavailable ? 400 : 700, color: unavailable ? 'var(--text-muted)' : 'var(--text-primary)', fontStyle: unavailable ? 'italic' : 'normal' }}>
+      <div style={{ fontSize: unavailable ? 12 : 16, fontWeight: unavailable ? 400 : 700, color: unavailable ? 'var(--text-muted)' : 'var(--text-primary)', fontStyle: unavailable ? 'italic' : 'normal', lineHeight: 1.2 }}>
         {value}
       </div>
-      {sub && <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>{sub}</div>}
+      {sub && <div style={{ fontSize: 10, color: 'var(--text-muted)' }}>{sub}</div>}
     </div>
   )
 }
@@ -151,20 +151,20 @@ function MetricCard({ label, value, sub, icon: Icon, color = '#60a5fa', unavaila
 function SectionBlock({ title, icon: Icon, color = '#60a5fa', children, defaultOpen = true }) {
   const [open, setOpen] = useState(defaultOpen)
   return (
-    <div style={{ marginBottom: 20, border: '1px solid var(--border-subtle)', borderRadius: 12, overflow: 'hidden' }}>
+    <div style={{ marginBottom: 12, border: '1px solid var(--border-subtle)', borderRadius: 10, overflow: 'hidden' }}>
       <div
         onClick={() => setOpen(o => !o)}
         style={{
-          display: 'flex', alignItems: 'center', gap: 10, padding: '12px 16px',
+          display: 'flex', alignItems: 'center', gap: 8, padding: '9px 14px',
           background: 'var(--bg-card)', cursor: 'pointer', userSelect: 'none',
           borderBottom: open ? '1px solid var(--border-subtle)' : 'none'
         }}
       >
-        {Icon && <Icon size={15} style={{ color }} />}
-        <span style={{ fontWeight: 600, fontSize: 14, color: 'var(--text-primary)', flex: 1 }}>{title}</span>
-        {open ? <ChevronDown size={14} style={{ color: 'var(--text-muted)' }} /> : <ChevronRight size={14} style={{ color: 'var(--text-muted)' }} />}
+        {Icon && <Icon size={14} style={{ color }} />}
+        <span style={{ fontWeight: 600, fontSize: 13, color: 'var(--text-primary)', flex: 1 }}>{title}</span>
+        {open ? <ChevronDown size={13} style={{ color: 'var(--text-muted)' }} /> : <ChevronRight size={13} style={{ color: 'var(--text-muted)' }} />}
       </div>
-      {open && <div style={{ padding: '16px', background: 'var(--bg-card-h)' }}>{children}</div>}
+      {open && <div style={{ padding: '12px 14px', background: 'var(--bg-card-h)' }}>{children}</div>}
     </div>
   )
 }
@@ -267,47 +267,53 @@ function AnalysisReport({ parseResult, analysis }) {
   const { format, parsing, timeline } = parseResult
   const { generic_stats, http, application, authentication, database, anomalies, security, top_messages } = analysis
 
-  const allMetrics = [...(http.available ? http.metrics : []), ...(application.available ? application.metrics : []), ...(authentication.available ? authentication.metrics : []), ...(database.available ? database.metrics : [])]
-  const kpiMetrics = generic_stats.slice(0, 6)
+  // 4 Core Numerical KPIs strictly locked to 1 row
+  const kpiMetrics = [
+    { name: 'Total Log Lines', value: parsing.total_non_empty_lines?.toLocaleString() ?? '0', status: 'calculated' },
+    { name: 'Parsed Events', value: (parseResult.parsed_events?.length || parsing.parsed_lines)?.toLocaleString() ?? '0', status: 'calculated' },
+    { name: 'Parse Success Rate', value: `${parsing.parse_success_rate}%`, status: 'calculated' },
+    { name: 'Format Confidence', value: `${(format.confidence * 100).toFixed(0)}%`, status: 'calculated' }
+  ]
 
   const realThreats = security.filter(s => s.type === 'security_threat')
   const realAnomalies = anomalies.filter(a => a.type === 'anomaly')
   const infoNotices = [...security.filter(s => s.type === 'info' || s.applicable === false), ...anomalies.filter(a => a.type === 'info')]
 
   return (
-    <div style={{ padding: '4px 0' }}>
+    <div style={{ padding: '0' }}>
       {/* Header */}
-      <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border-medium)', borderRadius: 12, padding: '18px 20px', marginBottom: 20 }}>
-        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16, flexWrap: 'wrap' }}>
-          <div>
-            <div style={{ fontSize: 16, fontWeight: 700, color: 'var(--text-primary)', marginBottom: 6 }}>
+      <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border-medium)', borderRadius: 10, padding: '10px 14px', marginBottom: 10 }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
+            <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--text-primary)' }}>
               Dynamic Analysis Report
             </div>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
               <Badge text={format.name} color='#9333ea' bg='rgba(147,51,234,0.12)' />
               <Badge text={format.category} color='#60a5fa' bg='rgba(96,165,250,0.12)' />
               <Badge text={`${(format.confidence*100).toFixed(0)}% format confidence`} color='#34d399' bg='rgba(52,211,153,0.12)' />
             </div>
           </div>
-          <div style={{ textAlign: 'right', fontSize: 13, color: 'var(--text-muted)' }}>
-            <div>{parsing.parsed_lines.toLocaleString()} / {parsing.total_non_empty_lines.toLocaleString()} lines parsed</div>
-            <div style={{ color: parsing.parse_success_rate > 90 ? '#34d399' : parsing.parse_success_rate > 60 ? '#f59e0b' : '#ef4444', fontWeight: 600 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 12, color: 'var(--text-muted)' }}>
+            <span>{parsing.parsed_lines.toLocaleString()} / {parsing.total_non_empty_lines.toLocaleString()} parsed</span>
+            <span style={{ color: parsing.parse_success_rate > 90 ? '#34d399' : parsing.parse_success_rate > 60 ? '#f59e0b' : '#ef4444', fontWeight: 700 }}>
               {parsing.parse_success_rate}% parse rate
-            </div>
+            </span>
           </div>
         </div>
 
         {analysis.summary.applicable_analyses.length > 0 && (
-          <div style={{ marginTop: 12, fontSize: 12, color: 'var(--text-muted)' }}>
-            Active analyses: {analysis.summary.applicable_analyses.map((a, i) => (
+          <div style={{ marginTop: 6, fontSize: 11, color: 'var(--text-muted)', display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 4 }}>
+            <span>Active analyses:</span>
+            {analysis.summary.applicable_analyses.map((a, i) => (
               <Badge key={i} text={a} color='#60a5fa' bg='rgba(96,165,250,0.08)' />
-            )).reduce((prev, curr, i) => [prev, <span key={`sp${i}`} style={{ margin: '0 4px' }} />, curr])}
+            ))}
           </div>
         )}
       </div>
 
-      {/* KPI Grid */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(170px, 1fr))', gap: 10, marginBottom: 20 }}>
+      {/* KPI Grid - Exactly 4 items, locked into 1 row! */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 8, marginBottom: 12 }}>
         {kpiMetrics.map((m, i) => (
           <MetricCard key={i} label={m.name} value={m.value ?? 'N/A'} unavailable={m.status === 'not_available'} />
         ))}
@@ -1585,57 +1591,57 @@ export default function SandboxView() {
 
   return (
     <section className="view detail-view-refined">
-      <div className="unified-banner tech-pattern-bg" style={{ '--glow-rgb': '244, 63, 94' }}>
+      <div className="unified-banner tech-pattern-bg" style={{ '--glow-rgb': '244, 63, 94', padding: '12px 24px', borderRadius: '0 0 16px 16px' }}>
         <div className="banner-content">
-          <div className="banner-title-area">
-            <div className="detail-icon-badge glass-icon"><Bot size={28} /></div>
+          <div className="banner-title-area" style={{ gap: 12 }}>
+            <div className="detail-icon-badge glass-icon" style={{ width: 38, height: 38, minWidth: 38, borderRadius: 8 }}><Bot size={20} /></div>
             <div>
-              <div className="banner-subtitle">Generic Log Analysis Pipeline</div>
-              <h1 className="banner-title">Threat Detector & AI Chatbot</h1>
+              <div className="banner-subtitle" style={{ fontSize: '0.75rem', marginBottom: 2 }}>Generic Log Analysis Pipeline</div>
+              <h1 className="banner-title" style={{ fontSize: '1.2rem', margin: 0 }}>Threat Detector & AI Chatbot</h1>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="page-body refined-body">
+      <div className="page-body refined-body" style={{ padding: '12px 20px' }}>
         {/* Mode toggle */}
-        <div style={{ display: 'flex', gap: 10, marginBottom: 24, flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}>
-          <div style={{ display: 'flex', gap: 10 }}>
+        <div style={{ display: 'flex', gap: 8, marginBottom: 12, flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div style={{ display: 'flex', gap: 8 }}>
             <button className={`action-btn ${mode === 'chatbot' ? 'active-tab' : ''}`} onClick={() => setMode('chatbot')}
-              style={{ padding: '8px 16px', background: mode === 'chatbot' ? 'var(--bg-card-h)' : 'var(--bg-card)', borderColor: mode === 'chatbot' ? 'var(--accent-cyan)' : 'var(--border-subtle)' }}>
-              <MessageSquare size={16} style={{ color: mode === 'chatbot' ? 'var(--accent-cyan)' : 'var(--text-muted)' }} /> AI Log Chatbot
+              style={{ padding: '6px 14px', fontSize: 13, background: mode === 'chatbot' ? 'var(--bg-card-h)' : 'var(--bg-card)', borderColor: mode === 'chatbot' ? 'var(--accent-cyan)' : 'var(--border-subtle)' }}>
+              <MessageSquare size={14} style={{ color: mode === 'chatbot' ? 'var(--accent-cyan)' : 'var(--text-muted)' }} /> AI Log Chatbot
             </button>
             <button className={`action-btn ${mode === 'sandbox' ? 'active-tab' : ''}`} onClick={() => setMode('sandbox')}
-              style={{ padding: '8px 16px', background: mode === 'sandbox' ? 'var(--bg-card-h)' : 'var(--bg-card)', borderColor: mode === 'sandbox' ? 'var(--accent-cyan)' : 'var(--border-subtle)' }}>
-              <Shield size={16} style={{ color: mode === 'sandbox' ? '#34d399' : 'var(--text-muted)' }} /> Threat Analysis Simulator
-              <span style={{ fontSize: 10, background: 'rgba(52,211,153,0.18)', color: '#34d399', padding: '1px 7px', borderRadius: 10, marginLeft: 6, fontWeight: 700 }}>SIMULATION</span>
+              style={{ padding: '6px 14px', fontSize: 13, background: mode === 'sandbox' ? 'var(--bg-card-h)' : 'var(--bg-card)', borderColor: mode === 'sandbox' ? 'var(--accent-cyan)' : 'var(--border-subtle)' }}>
+              <Shield size={14} style={{ color: mode === 'sandbox' ? '#34d399' : 'var(--text-muted)' }} /> Threat Analysis Simulator
+              <span style={{ fontSize: 9.5, background: 'rgba(52,211,153,0.18)', color: '#34d399', padding: '1px 6px', borderRadius: 8, marginLeft: 5, fontWeight: 700 }}>SIMULATION</span>
             </button>
           </div>
           {mode === 'sandbox' && (
-            <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, color: '#34d399', background: 'rgba(52,211,153,0.08)', padding: '4px 12px', borderRadius: 12, border: '1px solid rgba(52,211,153,0.2)' }}>
-              <Lock size={12} /> Local Analysis Engine • Zero Outbound Traffic
+            <div style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 11.5, color: '#34d399', background: 'rgba(52,211,153,0.08)', padding: '3px 10px', borderRadius: 10, border: '1px solid rgba(52,211,153,0.2)' }}>
+              <Lock size={11} /> Local Analysis Engine • Zero Outbound Traffic
             </div>
           )}
         </div>
 
         {/* ── CHATBOT MODE ──────────────────────────────────────────────────── */}
         {mode === 'chatbot' && (
-          <div className="sandbox-panel" style={{ minHeight: 500, display: 'flex', flexDirection: 'column' }}>
-            <div className="panel-title" style={{ borderBottom: '1px solid var(--border-subtle)', paddingBottom: 16, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                <Sparkles size={18} style={{ color: '#9333ea' }} /> SOC Analyst AI — Generic Log Analyzer
+          <div className="sandbox-panel" style={{ minHeight: 380, padding: '14px 18px', display: 'flex', flexDirection: 'column' }}>
+            <div className="panel-title" style={{ borderBottom: '1px solid var(--border-subtle)', paddingBottom: 10, marginBottom: 10, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <span style={{ display: 'flex', alignItems: 'center', gap: 7, fontSize: 13 }}>
+                <Sparkles size={16} style={{ color: '#9333ea' }} /> SOC Analyst AI — Generic Log Analyzer
               </span>
-              <span style={{ fontSize: 12, color: 'var(--text-muted)', fontWeight: 400 }}>
+              <span style={{ fontSize: 11.5, color: 'var(--text-muted)', fontWeight: 400 }}>
                 Upload any log file • All values from actual parsed data
               </span>
             </div>
 
-            <div className="chat-window" style={{ flex: 1, overflowY: 'auto', padding: '20px 0', display: 'flex', flexDirection: 'column', gap: 18, maxHeight: '60vh' }}>
+            <div className="chat-window" style={{ flex: 1, overflowY: 'auto', padding: '8px 0', display: 'flex', flexDirection: 'column', gap: 12, maxHeight: 'calc(100vh - 250px)' }}>
               {chatLog.map((msg, i) => (
-                <div key={i} style={{ display: 'flex', gap: 14, alignItems: 'flex-start', alignSelf: msg.role === 'user' ? 'flex-end' : 'flex-start', maxWidth: '94%', width: msg.type === 'report' ? '100%' : 'auto' }}>
+                <div key={i} style={{ display: 'flex', gap: 10, alignItems: 'flex-start', alignSelf: msg.role === 'user' ? 'flex-end' : 'flex-start', maxWidth: '96%', width: msg.type === 'report' ? '100%' : 'auto' }}>
                   {msg.role === 'ai' && (
-                    <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'linear-gradient(135deg, #1d4ed8, #9333ea, #e11d48)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', flexShrink: 0, boxShadow: 'var(--shadow-sm)' }}>
-                      <Bot size={19} />
+                    <div style={{ width: 28, height: 28, borderRadius: '50%', background: 'linear-gradient(135deg, #1d4ed8, #9333ea, #e11d48)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', flexShrink: 0, boxShadow: 'var(--shadow-sm)' }}>
+                      <Bot size={15} />
                     </div>
                   )}
                   <div style={{
